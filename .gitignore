@@ -7,3 +7,11 @@ Temp/
 Obj/
 Logs/
 Build/
+
+# .NET test artifacts
+dotnet/**/bin/
+dotnet/**/obj/
+
+# .NET test artifacts
+dotnet/**/bin/
+dotnet/**/obj/
