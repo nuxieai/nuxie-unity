@@ -1,0 +1,24 @@
+{
+  "name": "Nuxie.Unity.Editor.Tests",
+  "rootNamespace": "Nuxie.Unity.Editor.Tests",
+  "references": [
+    "Nuxie.Unity",
+    "Nuxie.Unity.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

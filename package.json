@@ -1,0 +1,26 @@
+{
+  "name": "com.nuxie.unity",
+  "displayName": "Nuxie Unity SDK",
+  "version": "0.1.0",
+  "unity": "2022.3",
+  "description": "Native-first Unity SDK for Nuxie (iOS + Android).",
+  "keywords": [
+    "nuxie",
+    "analytics",
+    "monetization",
+    "feature-gating",
+    "unity"
+  ],
+  "author": {
+    "name": "Nuxie",
+    "email": "support@nuxie.io",
+    "url": "https://nuxie.io"
+  },
+  "samples": [
+    {
+      "displayName": "Nuxie Demo",
+      "description": "Minimal integration scene and scripts.",
+      "path": "Samples~/NuxieDemo"
+    }
+  ]
+}
