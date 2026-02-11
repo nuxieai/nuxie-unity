@@ -335,4 +335,127 @@ internal static class NativePayloadMapper
     if (result.Message is not null) payload["message"] = result.Message;
     return payload;
   }
+
+  internal static ProfileResponse ParseProfileResponse(JsonElement element)
+  {
+    var additional = new Dictionary<string, object?>(StringComparer.Ordinal);
+    if (element.ValueKind == JsonValueKind.Object)
+    {
+      foreach (var property in element.EnumerateObject())
+      {
+        additional[property.Name] = JsonToObject(property.Value);
+      }
+    }
+
+    return new ProfileResponse
+    {
+      CustomerId = element.TryGetProperty("customerId", out var customerIdElement) ? customerIdElement.GetString() : null,
+      Campaigns = additional.TryGetValue("campaigns", out var campaigns) ? campaigns : null,
+      Segments = additional.TryGetValue("segments", out var segments) ? segments : null,
+      Flows = additional.TryGetValue("flows", out var flows) ? flows : null,
+      Features = additional.TryGetValue("features", out var features) ? features : null,
+      AdditionalProperties = additional,
+    };
+  }
+
+  internal static FeatureCheckResult ParseFeatureCheckResult(JsonElement element)
+  {
+    return new FeatureCheckResult
+    {
+      CustomerId = element.TryGetProperty("customerId", out var customerIdElement) ? customerIdElement.GetString() ?? "" : "",
+      FeatureId = element.TryGetProperty("featureId", out var featureIdElement) ? featureIdElement.GetString() ?? "" : "",
+      RequiredBalance = element.TryGetProperty("requiredBalance", out var requiredBalanceElement) && requiredBalanceElement.TryGetInt32(out var requiredBalance)
+        ? requiredBalance
+        : 1,
+      Code = element.TryGetProperty("code", out var codeElement) ? codeElement.GetString() ?? "" : "",
+      Allowed = element.TryGetProperty("allowed", out var allowedElement) && allowedElement.ValueKind == JsonValueKind.True,
+      Unlimited = element.TryGetProperty("unlimited", out var unlimitedElement) && unlimitedElement.ValueKind == JsonValueKind.True,
+      Balance = element.TryGetProperty("balance", out var balanceElement) && balanceElement.TryGetInt32(out var balance)
+        ? balance
+        : null,
+      Type = element.TryGetProperty("type", out var typeElement)
+        ? ParseFeatureType(typeElement.GetString())
+        : FeatureType.Boolean,
+      Preview = element.TryGetProperty("preview", out var previewElement) ? JsonToObject(previewElement) : null,
+    };
+  }
+
+  internal static FeatureUsageResult ParseFeatureUsageResult(JsonElement element)
+  {
+    FeatureUsageInfo? usage = null;
+    if (element.TryGetProperty("usage", out var usageElement) && usageElement.ValueKind == JsonValueKind.Object)
+    {
+      usage = new FeatureUsageInfo
+      {
+        Current = usageElement.TryGetProperty("current", out var currentElement) && currentElement.TryGetDouble(out var current) ? current : 0,
+        Limit = usageElement.TryGetProperty("limit", out var limitElement) && limitElement.TryGetDouble(out var limit) ? limit : null,
+        Remaining = usageElement.TryGetProperty("remaining", out var remainingElement) && remainingElement.TryGetDouble(out var remaining) ? remaining : null,
+      };
+    }
+
+    return new FeatureUsageResult
+    {
+      Success = element.TryGetProperty("success", out var successElement) && successElement.ValueKind == JsonValueKind.True,
+      FeatureId = element.TryGetProperty("featureId", out var featureIdElement) ? featureIdElement.GetString() ?? "" : "",
+      AmountUsed = element.TryGetProperty("amountUsed", out var amountUsedElement) && amountUsedElement.TryGetDouble(out var amountUsed)
+        ? amountUsed
+        : 0,
+      Message = element.TryGetProperty("message", out var messageElement) ? messageElement.GetString() : null,
+      Usage = usage,
+    };
+  }
+
+  internal static Dictionary<string, object?> ToDictionary(JsonElement element)
+  {
+    if (element.ValueKind != JsonValueKind.Object)
+    {
+      return new Dictionary<string, object?>();
+    }
+
+    var result = new Dictionary<string, object?>(StringComparer.Ordinal);
+    foreach (var property in element.EnumerateObject())
+    {
+      result[property.Name] = JsonToObject(property.Value);
+    }
+
+    return result;
+  }
+
+  private static FeatureType ParseFeatureType(string? raw)
+  {
+    return raw switch
+    {
+      "metered" => FeatureType.Metered,
+      "creditSystem" => FeatureType.CreditSystem,
+      "credit_system" => FeatureType.CreditSystem,
+      _ => FeatureType.Boolean,
+    };
+  }
+
+  private static object? JsonToObject(JsonElement element)
+  {
+    return element.ValueKind switch
+    {
+      JsonValueKind.Null => null,
+      JsonValueKind.True => true,
+      JsonValueKind.False => false,
+      JsonValueKind.Number when element.TryGetInt64(out var longValue) => longValue,
+      JsonValueKind.Number when element.TryGetDouble(out var doubleValue) => doubleValue,
+      JsonValueKind.String => element.GetString(),
+      JsonValueKind.Array => JsonArrayToList(element),
+      JsonValueKind.Object => ToDictionary(element),
+      _ => element.ToString(),
+    };
+  }
+
+  private static List<object?> JsonArrayToList(JsonElement element)
+  {
+    var list = new List<object?>();
+    foreach (var item in element.EnumerateArray())
+    {
+      list.Add(JsonToObject(item));
+    }
+
+    return list;
+  }
 }
