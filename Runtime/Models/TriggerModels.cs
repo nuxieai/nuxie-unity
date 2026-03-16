@@ -45,6 +45,7 @@ public enum GateSource
 public enum JourneyExitReason
 {
   Completed,
+  Dismissed,
   GoalMet,
   TriggerUnmatched,
   Expired,
