@@ -244,6 +244,7 @@ internal static class NativePayloadMapper
     return value switch
     {
       "completed" => JourneyExitReason.Completed,
+      "dismissed" => JourneyExitReason.Dismissed,
       "goal_met" => JourneyExitReason.GoalMet,
       "trigger_unmatched" => JourneyExitReason.TriggerUnmatched,
       "expired" => JourneyExitReason.Expired,
