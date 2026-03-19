@@ -48,6 +48,30 @@ Add the Android Nuxie SDK dependency to your Unity Gradle build so `io.nuxie.sdk
 
 In Nuxie monorepo-based builds, this is typically a Gradle project dependency on `:nuxie-android`.
 
+## Native permission action setup
+
+Flow-authored native permission actions run inside the underlying iOS/Android
+SDKs, so no new Unity bridge API is required. Host platform projects still need
+the matching native declarations:
+
+- iOS:
+  - `NSUserTrackingUsageDescription` for `request_tracking`
+  - `NSCameraUsageDescription` for `request_permission("camera")`
+  - `NSMicrophoneUsageDescription` for `request_permission("microphone")`
+  - `NSPhotoLibraryUsageDescription` for `request_permission("photos")`
+  - `NSLocationWhenInUseUsageDescription` for
+    `request_permission("location")`
+- Android:
+  - `android.permission.CAMERA`
+  - `android.permission.RECORD_AUDIO`
+  - `android.permission.READ_MEDIA_IMAGES` on Android 13+ or
+    `android.permission.READ_EXTERNAL_STORAGE` on Android 12 and below
+  - `android.permission.ACCESS_COARSE_LOCATION` and/or
+    `android.permission.ACCESS_FINE_LOCATION`
+
+`request_tracking` is iOS-only. `request_notifications` uses the native Android
+notification permission path provided by `nuxie-android`.
+
 ## Quick Start
 
 ```csharp

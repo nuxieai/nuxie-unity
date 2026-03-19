@@ -21,6 +21,10 @@ Before building for device, make sure platform projects include native Nuxie SDK
 
 See [Native Dependencies](native-dependencies.md) for details.
 
+If authored flows use native permission actions, also add the matching iOS
+usage-description keys and Android dangerous permissions in your generated
+platform projects.
+
 ## 3. Configure Nuxie Once
 
 Create a bootstrap component:
@@ -89,3 +93,18 @@ var sdk = await Nuxie.ConfigureAsync(new NuxieConfig(apiKey), new MyPurchaseCont
 ```
 
 See the sample and API reference for request/result models.
+
+## 7. Native permission actions
+
+No extra Unity-side API is needed for:
+
+- `request_notifications`
+- `request_tracking`
+- `request_permission("camera" | "microphone" | "photos" | "location")`
+
+Those actions execute in the native SDKs, but the host platform projects still
+need:
+
+- iOS: the matching `Info.plist` usage-description keys
+- Android: manifest declarations for camera, microphone, photo-library, or
+  location permissions used by your flows
