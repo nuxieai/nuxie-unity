@@ -22,6 +22,15 @@ Typical approaches:
 
 If `Nuxie` is missing, iOS bridge calls return native error payloads.
 
+If flows use native permission actions, also add the matching usage-description
+keys to the generated app target:
+
+- `NSUserTrackingUsageDescription`
+- `NSCameraUsageDescription`
+- `NSMicrophoneUsageDescription`
+- `NSPhotoLibraryUsageDescription`
+- `NSLocationWhenInUseUsageDescription`
+
 ## Android
 
 Bridge files:
@@ -36,6 +45,17 @@ The bridge imports `io.nuxie.sdk.*`, so your Gradle build must include Android N
 Ensure Unity's Android export resolves `io.nuxie.sdk` classes.
 
 In Nuxie monorepo setups, this is typically wired as a project dependency on `:nuxie-android`.
+
+If flows use `request_notifications` or `request_permission(...)`, the app
+manifest must also declare the matching dangerous permissions:
+
+- `android.permission.POST_NOTIFICATIONS` for `request_notifications`
+- `android.permission.CAMERA`
+- `android.permission.RECORD_AUDIO`
+- `android.permission.READ_MEDIA_IMAGES` on Android 13+ and
+  `android.permission.READ_EXTERNAL_STORAGE` on Android 12 and below
+- `android.permission.ACCESS_COARSE_LOCATION` and/or
+  `android.permission.ACCESS_FINE_LOCATION`
 
 ## Unity Callback Host
 
