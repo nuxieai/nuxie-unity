@@ -27,7 +27,7 @@ This package keeps Unity business logic thin and delegates runtime behavior to t
 ```json
 {
   "dependencies": {
-    "com.nuxie.unity": "https://github.com/nuxieio/nuxie-unity.git#main"
+    "com.nuxie.unity": "https://github.com/nuxieai/nuxie-unity.git#main"
   }
 }
 ```
