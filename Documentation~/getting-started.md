@@ -7,7 +7,7 @@ Add to `Packages/manifest.json`:
 ```json
 {
   "dependencies": {
-    "com.nuxie.unity": "https://github.com/nuxieio/nuxie-unity.git#main"
+    "com.nuxie.unity": "https://github.com/nuxieai/nuxie-unity.git#main"
   }
 }
 ```
