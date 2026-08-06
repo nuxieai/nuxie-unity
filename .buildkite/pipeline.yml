@@ -1,0 +1,17 @@
+env:
+  CI: "1"
+
+steps:
+  - label: ":unity: Managed and Apple bridge contracts"
+    command: |
+      set -euo pipefail
+      dotnet test dotnet/Nuxie.Unity.slnx --nologo
+      swiftc -parse Runtime/Plugins/iOS/NuxieUnityBridge.swift
+    agents:
+      queue: nuxie-pr
+      nuxie-platform: macos
+    timeout_in_minutes: 30
+    retry:
+      automatic:
+        - exit_status: -1
+          limit: 1
