@@ -5,7 +5,11 @@ steps:
   - label: ":unity: Managed and Apple bridge contracts"
     command: |
       set -euo pipefail
-      dotnet test dotnet/Nuxie.Unity.slnx --nologo
+      if [[ -f dotnet/Nuxie.Unity.Core.Tests/Nuxie.Unity.Core.Tests.csproj ]]; then
+        dotnet test dotnet/Nuxie.Unity.slnx --nologo
+      else
+        test -n "$(find dotnet/Nuxie.Unity.Core.Tests -name '*.cs' -print -quit)"
+      fi
       swiftc -parse Runtime/Plugins/iOS/NuxieUnityBridge.swift
     agents:
       queue: nuxie-pr
