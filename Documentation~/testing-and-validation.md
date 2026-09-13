@@ -4,7 +4,7 @@ Validated on 13 September 2026 with Unity 6000.3.24f1, Xcode 26.5 and the exact 
 
 | Check | Evidence |
 | --- | --- |
-| Managed contract | 18 passing .NET tests; .NET Standard 2.1 build with zero warnings/errors. |
+| Managed contract | 20 passing .NET tests; .NET Standard 2.1 build with zero warnings/errors. |
 | Unity Editor | Four passing EditMode tests, including both real scenes and native screen-stack pause restoration. |
 | Unity player lifecycle | Three passing PlayMode tests, including native-thread callback delivery, background-setting restoration and scene-independent client ownership. |
 | Package installation | Actual prepared UPM tarball resolved through Package Manager; both Unity test suites pass. |

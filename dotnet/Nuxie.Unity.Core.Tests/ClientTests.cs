@@ -11,6 +11,7 @@ namespace Nuxie.Unity.Tests
     internal sealed class FakeTransport : ITransport
     {
         internal string Session;
+        internal JObject Configuration;
         public string Platform => "ios";
         public event Action<string> Event;
         internal readonly List<string> Calls = new List<string>();
@@ -22,7 +23,7 @@ namespace Nuxie.Unity.Tests
         public Task<string> Invoke(string method,JObject args)
         {
             Calls.Add(method);
-            if (method == "configure") Session = (string)Wire.Object((string)args["configuration"])["session"];
+            if (method == "configure") { Configuration = Wire.Object((string)args["configuration"]); Session = (string)Configuration["session"]; }
             if (Handler != null) return Handler(method,args);
             return Task.FromResult(method == "configure" ? Wire.Encode(new JObject { ["contract"] = 1, ["session"] = Session, ["nativeVersion"] = "test", ["snapshot"] = Snapshot() }) : method == "identify" || method == "reset" ? Wire.Encode(Snapshot("1","1","ready")) : null);
         }
@@ -93,6 +94,15 @@ namespace Nuxie.Unity.Tests
             internal readonly TaskCompletionSource<PurchaseResult> Result = new TaskCompletionSource<PurchaseResult>();
             public Task<PurchaseResult> PurchaseAsync(StoreProduct product) { Calls++; return Result.Task; }
             public Task<RestoreResult> RestorePurchasesAsync() => Task.FromResult(new RestoreResult(RestoreOutcome.NoPurchases));
+        }
+        [Theory] [InlineData(false,"full")] [InlineData(true,"observer")]
+        public async Task CheckoutOwnerAlsoOwnsNativeTransactionFinishing(bool external,string mode)
+        {
+            var t = new FakeTransport(); var c = new Client(t); var options = Options();
+            if (external) options.Billing = NuxieBilling.External(new PurchaseController());
+            await c.ConfigureAsync(options);
+            Assert.Equal(mode,(string)t.Configuration["purchaseHandlingMode"]);
+            Assert.Equal(external,(bool)t.Configuration["externalBilling"]);
         }
         [Fact] public async Task DuplicatePurchaseCallbacksStartOnlyOneCheckout()
         {

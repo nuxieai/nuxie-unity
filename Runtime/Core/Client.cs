@@ -72,7 +72,8 @@ namespace Nuxie.Unity.Internal
             var billing = options.Billing ?? throw Wire.Invalid("Billing must be specified");
             var input = new JObject { ["contract"] = 1, ["apiKey"] = Wire.Text(transport.Platform == "ios" ? options.IosApiKey : options.AndroidApiKey,"Platform API key"),
                 ["environment"] = options.Environment.ToString().ToLowerInvariant(), ["logLevel"] = options.LogLevel.ToString().ToLowerInvariant(),
-                ["localeIdentifier"] = options.LocaleIdentifier, ["externalBilling"] = billing.Controller != null };
+                ["localeIdentifier"] = options.LocaleIdentifier, ["externalBilling"] = billing.Controller != null,
+                ["purchaseHandlingMode"] = billing.Controller != null ? "observer" : "full" };
             if (!Enum.IsDefined(typeof(NuxieEnvironment), options.Environment) || !Enum.IsDefined(typeof(NuxieLogLevel),options.LogLevel)) throw Wire.Invalid("Invalid configuration enum");
             var key = Wire.Encode(input);
             if (setup != null || Status.State == NuxieStatusKind.Configured)
