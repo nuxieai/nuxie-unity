@@ -1,0 +1,1 @@
+<linker><assembly fullname="Nuxie.Unity"><type fullname="Nuxie.Unity.Internal.NativeTransport" preserve="all"/><type fullname="Nuxie.Unity.Internal.NativeTransport/AndroidCallback" preserve="all"/><type fullname="Nuxie.Unity.Internal.NativeDispatcher" preserve="all"/></assembly></linker>
