@@ -1,0 +1,2 @@
+-keep class ai.nuxie.unity.NuxieUnityBridge { public *; }
+-keep interface ai.nuxie.unity.NuxieUnityBridge$Callback { *; }

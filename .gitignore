@@ -12,3 +12,13 @@ Build/
 # .NET test artifacts
 dotnet/**/bin/
 dotnet/**/obj/
+.native/
+Native~/Android/.gradle/
+Native~/Android/build/
+Native~/Android/local.properties
+Artifacts~/
+UserSettings/
+*.tgz
+!dotnet/Nuxie.Unity.Core/Nuxie.Unity.Core.csproj
+
+ExampleProject/Assets/Resources/NuxieLab.local.json*
