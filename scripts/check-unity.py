@@ -23,7 +23,8 @@ subprocess.run(['python3', str(root / 'scripts/pack.py')], check=True)
 base = [str(editor), '-batchmode', '-projectPath', str(root / 'ExampleProject')]
 manifest = root / 'ExampleProject/Packages/manifest.json'
 lock = manifest.with_name('packages-lock.json')
-saved = {p: p.read_bytes() if p.exists() else None for p in [manifest,lock]}
+inputs = [manifest,lock,*(root / 'ExampleProject/ProjectSettings').glob('*')]
+saved = {p: p.read_bytes() if p.exists() else None for p in inputs if not p.is_dir()}
 try:
     if args.packed:
         package = json.loads((root / 'package.json').read_text())
@@ -42,8 +43,9 @@ try:
         for target, method in [('iOS', 'Ios'), ('iOS', 'IosSimulator'), ('Android', 'Android')]:
             subprocess.run(base + ['-quit', '-buildTarget', target, '-executeMethod', 'Nuxie.Unity.Example.LabBuild.' + method, '-logFile', str(evidence / (method + '.log'))], check=True)
 finally:
-    if args.packed:
-        for path, content in saved.items():
-            if content is None: path.unlink(missing_ok=True)
-            else: path.write_bytes(content)
+    # Build entry points select platform settings; Unity also normalizes YAML.
+    # Preserve the source project's exact inputs after success or failure.
+    for path, content in saved.items():
+        if content is None: path.unlink(missing_ok=True)
+        else: path.write_bytes(content)
 print('Unity qualification passed. Evidence: ' + str(evidence))
