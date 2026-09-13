@@ -155,6 +155,8 @@ Native billing is the default. If your game already owns checkout, configure `Bi
 
 The controller receives the exact selected store product/offer and returns a typed purchase outcome: Purchased, Cancelled, Pending or Failed. Restore returns Restored, NoPurchases or Failed. Nuxie owns callback deadlines and rejects late or duplicate completion. Starting checkout is not evidence of access; continue observing Features.
 
+External billing leaves transaction finishing/acknowledgement to your host integration; Nuxie may still synchronize verified transactions according to the native provider authority. Native billing owns its transaction lifecycle.
+
 Unity IAP is optional. Implement the controller around your existing store integration; preserve the exact selected offer and report pending purchases accurately. Do not run two checkout owners for the same Nuxie request.
 
 ## Try the SDK Lab
