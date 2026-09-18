@@ -13,8 +13,11 @@ archive. `python3 scripts/check-unity.py --packed` passed four EditMode and
 nine PlayMode tests and exported iOS device, arm64 iOS simulator, and Android
 arm64 IL2CPP projects. Both Xcode projects name the current iOS revision; the
 exported Android bridge POM names the current Android revision. The source
-project settings were restored after checking. Exported-app video playback
-and final readiness/review remain outstanding for this refresh.
+project settings were restored after checking. The exported Android application
+built with the Unity-supplied JDK/Gradle (56 tasks) and passed 16 KiB ZIP
+alignment. Xcode 27 built the exported arm64 simulator application in Debug
+with signing disabled. Signed-video playback and final readiness/review remain
+outstanding for this refresh.
 
 
 ## Earlier video delivery candidate — September 18, 2026
