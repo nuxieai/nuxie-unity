@@ -1,6 +1,37 @@
 # Qualification record
 
-Validated on 13 September 2026 with Unity 6000.3.24f1, Xcode 26.5 and the exact native revisions in `NATIVE-PINS.json`.
+## Video delivery candidate — September 18, 2026
+
+This candidate pins pushed development revisions iOS
+`38428e8bb1c65605d6c982ff22b2a18d63229950` and Android
+`e76714a76e14b8f293e782934c107a789d0a67f0`, pending final native qualification
+and review under [UNIV-3262](https://universe.basis.dev/issue/UNIV-3262).
+
+Unity 6000.3.24f1 passed all 20 managed tests and the .NET Standard 2.1 build.
+Native preparation built the exact Android Maven dependency and Kotlin bridge;
+the Swift bridge compiled against the exact iOS pin on Xcode 27. The first
+Swift check encountered a stale compiled C module after the native header
+changed; cleaning that check project's generated products and rebuilding passed.
+
+`scripts/check-unity.py --packed` installed the prepared UPM tarball, passed
+four EditMode and nine PlayMode tests, and exported iOS device, arm64 iOS
+simulator, and Android arm64 IL2CPP projects. The installed package's native
+pins matched the candidate. Both exported Xcode projects contain the exact iOS
+revision, and the exported Android bridge POM references the exact Android
+revision. The source project's package manifest and settings were restored
+after the check.
+
+These results establish bridge compilation, managed behavior, package
+installation, and project export. Building and running the exported native
+applications with signed video, including acquisition and lifecycle checks,
+remains outstanding. The earlier live evidence below does not qualify video
+at these candidate revisions. Final readiness/review and the parent pointer
+update remain pending.
+
+## Earlier qualification
+
+Validated on 13 September 2026 with Unity 6000.3.24f1 and Xcode 26.5,
+before the video candidate pins above.
 
 | Check | Evidence |
 | --- | --- |
