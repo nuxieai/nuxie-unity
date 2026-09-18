@@ -2,14 +2,14 @@
 
 ## Native pin refresh — September 18, 2026
 
-Current pins are iOS `072e38b24df67f7e6326815ed5e126c93c8e67d7` and Android
+Current pins are iOS `858321e2e57cc62b6cb978a97834ad068f748c02` and Android
 `1514b1cce3d64502b483c41fa551e7290caf10b0`, both pushed development commits.
 They include shared decoder admission and hidden-screen media suspension.
 `python3 scripts/prepare-native.py` rebuilt the exact Android SDK and bridge
-Maven artifacts. `python3 scripts/check-ios.py` compiled the shipped Swift
-bridge against the exact iOS pin, verified from its resolved checkout.
-`python3 scripts/pack.py` verified native artifact hashes and packaged the UPM
-archive. `python3 scripts/check-unity.py --packed` passed four EditMode and
+Maven artifacts. Before the cache-path fix, `python3 scripts/check-ios.py`
+compiled the shipped Swift bridge against iOS `072e38b2`, and
+`python3 scripts/pack.py` verified native hashes and packaged the UPM archive.
+At those pins, `python3 scripts/check-unity.py --packed` passed four EditMode and
 nine PlayMode tests and exported iOS device, arm64 iOS simulator, and Android
 arm64 IL2CPP projects. Both Xcode projects name the current iOS revision; the
 exported Android bridge POM names the current Android revision. The source
@@ -29,12 +29,26 @@ The request ledger still showed only one GET per asset. Independent hashes of
 both content-addressed files in the app cache matched the release inventory.
 
 This is emulator playback/acquisition evidence for the actual Unity player.
-It does not qualify audio output, captions, offline launch, failure recovery,
-or iOS playback. The temporary harness initially used an obsolete wrapped
-profile response, then was corrected to the current canonical profile and
-headers. Its batch acknowledgments still used an incorrect fixed count,
-causing telemetry retries; telemetry delivery is not claimed by this run.
-Final readiness/review remains outstanding.
+It does not qualify audio output, captions, or the full failure matrix. The
+harness now returns the canonical profile and authority headers, acknowledges
+the actual batch count, and preserves its descriptor across server restarts.
+
+The iOS player initially exposed a native cache-path bug: AVFoundation rejected
+the extension-free content-addressed MP4. Native revision `858321e2` fixes this
+with a scoped `.mp4` symlink, retaining the cache lease without copying media.
+Its regression failed before the fix; all 21 native video tests passed afterward.
+The Unity simulator app rebuilt against that exact revision and passed the
+original 12-screenshot red/blue playback probe. The updated development Lab
+supports `autoConnect` without running spending checks; all 13 Unity tests and
+three mobile exports passed with that change.
+
+With the delivery server stopped and its HTTPS endpoint returning 502, both
+apps were terminated and relaunched. Twelve iOS and ten Android screenshot
+samples observed both video phases from cached profiles/assets. This qualifies
+restart during a delivery-origin outage, not every airplane-mode, eviction,
+or corruption scenario. iOS emitted an unbalanced appearance-transition warning;
+its cause remains unisolated. Final native preparation/package refresh for the
+new iOS pin, readiness, and review remain outstanding.
 
 
 ## Earlier video delivery candidate — September 18, 2026
