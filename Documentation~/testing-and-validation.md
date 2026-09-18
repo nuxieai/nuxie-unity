@@ -10,9 +10,11 @@ dotnet/Nuxie.Unity.Core/Nuxie.Unity.Core.csproj --nologo` passed.
 `python3 scripts/prepare-native.py` rebuilt the Android SDK and bridge Maven
 artifacts, and `python3 scripts/pack.py` verified their hashes and produced the
 UPM archive. `python3 scripts/check-unity.py --packed --tests-only` installed
-that actual package and passed all four EditMode and nine PlayMode tests. Native
-exports/builds, playback and final readiness remain pending. Results below
-identify the earlier revisions they qualified.
+that actual package and passed all four EditMode and nine PlayMode tests.
+`python3 scripts/check-ios.py` also compiled the shipped Swift bridge against
+the exact iOS pin for the ARM64 simulator. Native player exports/builds, playback
+and final readiness remain pending. Results below identify the earlier revisions
+they qualified.
 
 ## Native pin refresh — September 18, 2026
 
