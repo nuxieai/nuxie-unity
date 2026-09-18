@@ -26,11 +26,11 @@ namespace Nuxie.Unity.Samples
 #if UNITY_EDITOR
         private NuxieEditorSimulator simulator;
 #endif
-        private bool runLocalChecks;
+        private bool runLocalChecks, autoConnect;
         [Serializable] private sealed class LocalConfiguration
         {
             public string iosKey, androidKey, customer, feature, entityA, entityB, trigger;
-            public bool runApiChecks;
+            public bool runApiChecks, autoConnect;
         }
         private void Awake()
         {
@@ -43,17 +43,18 @@ namespace Nuxie.Unity.Samples
                 iosKey = config.iosKey ?? iosKey; androidKey = config.androidKey ?? androidKey;
                 customer = config.customer ?? customer; feature = config.feature ?? feature;
                 entityA = config.entityA ?? entityA; entityB = config.entityB ?? entityB;
-                trigger = config.trigger ?? trigger; runLocalChecks = config.runApiChecks;
+                trigger = config.trigger ?? trigger; runLocalChecks = config.runApiChecks; autoConnect = config.autoConnect;
             }
 #endif
         }
         private void Start()
         {
 #if !UNITY_EDITOR
-            if (runLocalChecks && sdk.Status.State == NuxieStatusKind.Unconfigured) Run(async () =>
+            if ((runLocalChecks || autoConnect) && sdk.Status.State == NuxieStatusKind.Unconfigured) Run(async () =>
             {
                 await sdk.ConfigureAsync(new NuxieOptions { IosApiKey = iosKey, AndroidApiKey = androidKey, Environment = NuxieEnvironment.Development, LogLevel = NuxieLogLevel.Debug });
-                await LabChecks.RunAsync(sdk,customer,feature,entityA,entityB,operation,Record);
+                if (runLocalChecks) await LabChecks.RunAsync(sdk,customer,feature,entityA,entityB,operation,Record);
+                else await sdk.IdentifyAsync(customer);
             });
 #endif
         }
