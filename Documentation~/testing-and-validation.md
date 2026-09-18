@@ -1,8 +1,25 @@
 # Qualification record
 
-## Video delivery candidate — September 18, 2026
+## Native pin refresh — September 18, 2026
 
-This candidate pins pushed development revisions iOS
+Current pins are iOS `072e38b24df67f7e6326815ed5e126c93c8e67d7` and Android
+`1514b1cce3d64502b483c41fa551e7290caf10b0`, both pushed development commits.
+They include shared decoder admission and hidden-screen media suspension.
+`python3 scripts/prepare-native.py` rebuilt the exact Android SDK and bridge
+Maven artifacts. `python3 scripts/check-ios.py` compiled the shipped Swift
+bridge against the exact iOS pin, verified from its resolved checkout.
+`python3 scripts/pack.py` verified native artifact hashes and packaged the UPM
+archive. `python3 scripts/check-unity.py --packed` passed four EditMode and
+nine PlayMode tests and exported iOS device, arm64 iOS simulator, and Android
+arm64 IL2CPP projects. Both Xcode projects name the current iOS revision; the
+exported Android bridge POM names the current Android revision. The source
+project settings were restored after checking. Exported-app video playback
+and final readiness/review remain outstanding for this refresh.
+
+
+## Earlier video delivery candidate — September 18, 2026
+
+The earlier candidate pinned pushed development revisions iOS
 `38428e8bb1c65605d6c982ff22b2a18d63229950` and Android
 `e76714a76e14b8f293e782934c107a789d0a67f0`, pending final native qualification
 and review under [UNIV-3262](https://universe.basis.dev/issue/UNIV-3262).
