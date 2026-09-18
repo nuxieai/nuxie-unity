@@ -4,9 +4,13 @@
 
 iOS `95d76d41eb4cc945cb57e5c1bcd8333ed15d55cc` and Android `4d65783e2eec5b585673041146dff887258d3c93` include
 published Apple runtime 0.10.8 and Android runtime 0.4.8, rendered-video visibility,
-and interruption recovery fixes. Native preparation, wrapper builds, playback,
-and final readiness for these revisions remain pending. Results below identify
-the earlier revisions they qualified.
+and interruption recovery fixes. At these exact pins, `dotnet test
+dotnet/Nuxie.Unity.slnx --nologo` passed all 20 managed tests and `dotnet build
+dotnet/Nuxie.Unity.Core/Nuxie.Unity.Core.csproj --nologo` passed.
+`python3 scripts/prepare-native.py` rebuilt the Android SDK and bridge Maven
+artifacts, and `python3 scripts/pack.py` verified their hashes and produced the
+UPM archive. Fresh Unity/native builds, playback and final readiness remain
+pending. Results below identify the earlier revisions they qualified.
 
 ## Native pin refresh — September 18, 2026
 
