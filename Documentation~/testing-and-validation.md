@@ -47,8 +47,9 @@ apps were terminated and relaunched. Twelve iOS and ten Android screenshot
 samples observed both video phases from cached profiles/assets. This qualifies
 restart during a delivery-origin outage, not every airplane-mode, eviction,
 or corruption scenario. iOS emitted an unbalanced appearance-transition warning;
-its cause remains unisolated. Final native preparation/package refresh for the
-new iOS pin, readiness, and review remain outstanding.
+its cause remains unisolated. The refreshed Swift bridge check resolved exact iOS `858321e2` and passed;
+packing verified the native artifacts and produced the updated UPM archive.
+Final readiness and review remain outstanding.
 
 
 ## Earlier video delivery candidate — September 18, 2026
