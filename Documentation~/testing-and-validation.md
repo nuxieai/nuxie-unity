@@ -16,8 +16,25 @@ exported Android bridge POM names the current Android revision. The source
 project settings were restored after checking. The exported Android application
 built with the Unity-supplied JDK/Gradle (56 tasks) and passed 16 KiB ZIP
 alignment. Xcode 27 built the exported arm64 simulator application in Debug
-with signing disabled. Signed-video playback and final readiness/review remain
-outstanding for this refresh.
+with signing disabled.
+
+The Android arm64 Lab then consumed a synthetic canonical profile over HTTPS,
+with normal authority headers and development-key signature verification. The
+production compiler/publisher prepared the external-video release. The app
+fetched the `.nux` and MP4 once each, emitted `journey_started` and `screen_shown`,
+and rendered repeated red/blue video transitions. Sixteen pixel samples over
+7.99 seconds observed both colors across repeated loops. After Home/foreground,
+eight further samples over 3.49 seconds showed resumed red/blue transitions.
+The request ledger still showed only one GET per asset. Independent hashes of
+both content-addressed files in the app cache matched the release inventory.
+
+This is emulator playback/acquisition evidence for the actual Unity player.
+It does not qualify audio output, captions, offline launch, failure recovery,
+or iOS playback. The temporary harness initially used an obsolete wrapped
+profile response, then was corrected to the current canonical profile and
+headers. Its batch acknowledgments still used an incorrect fixed count,
+causing telemetry retries; telemetry delivery is not claimed by this run.
+Final readiness/review remains outstanding.
 
 
 ## Earlier video delivery candidate — September 18, 2026
