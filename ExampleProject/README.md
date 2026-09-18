@@ -21,10 +21,11 @@ For local development, optionally create ignored `Assets/Resources/NuxieLab.loca
   "entityA": "entity-a",
   "entityB": "entity-b",
   "trigger": "sdk_lab_requested",
+  "autoConnect": true,
   "runApiChecks": false
 }
 ```
 
-Only Editor and development players load this file. Setting `runApiChecks` to true automatically connects and spends one unit on every mobile launch; use disposable grants. The file is excluded from Git, but development builds contain its public keys. Never put server credentials here.
+Only Editor and development players load this file. `autoConnect` configures and identifies the mobile player on launch without running the spending checks. Setting `runApiChecks` to true automatically connects and spends one unit on every mobile launch; use disposable grants. The file is excluded from Git, but development builds contain its public keys. Never put server credentials here.
 
 The example uses OpenGL ES 3 on Android for emulator compatibility and a windowed launch to avoid immersive-mode onboarding interrupting validation. Those choices are example settings, not SDK requirements. Development exports permit local networking; release exports do not add those development exceptions.
