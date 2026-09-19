@@ -30,7 +30,7 @@ namespace Nuxie.Unity.Samples
         [Serializable] private sealed class LocalConfiguration
         {
             public string iosKey, androidKey, customer, feature, entityA, entityB, trigger;
-            public bool runApiChecks, autoConnect;
+            public bool runApiChecks, autoConnect, audioQualification;
         }
         private void Awake()
         {
@@ -44,6 +44,7 @@ namespace Nuxie.Unity.Samples
                 customer = config.customer ?? customer; feature = config.feature ?? feature;
                 entityA = config.entityA ?? entityA; entityB = config.entityB ?? entityB;
                 trigger = config.trigger ?? trigger; runLocalChecks = config.runApiChecks; autoConnect = config.autoConnect;
+                if (config.audioQualification) gameObject.AddComponent<NuxieGameAudioProbe>().Initialize(sdk);
             }
 #endif
         }
@@ -52,6 +53,9 @@ namespace Nuxie.Unity.Samples
 #if !UNITY_EDITOR
             if ((runLocalChecks || autoConnect) && sdk.Status.State == NuxieStatusKind.Unconfigured) Run(async () =>
             {
+                #if DEVELOPMENT_BUILD
+                if (GetComponent<NuxieGameAudioProbe>() != null) await Task.Delay(1000);
+#endif
                 await sdk.ConfigureAsync(new NuxieOptions { IosApiKey = iosKey, AndroidApiKey = androidKey, Environment = NuxieEnvironment.Development, LogLevel = NuxieLogLevel.Debug });
                 if (runLocalChecks) await LabChecks.RunAsync(sdk,customer,feature,entityA,entityB,operation,Record);
                 else await sdk.IdentifyAsync(customer);
@@ -75,8 +79,15 @@ namespace Nuxie.Unity.Samples
         }
         private void HandleScreenActivity(string name,IReadOnlyDictionary<string,object> properties)
         {
-            if (properties == null || !properties.TryGetValue("screen_id",out var screen)) return;
+            if (properties == null) return;
             var journey = properties.TryGetValue("journey_id",out var run) ? run.ToString() : "";
+            if (name == "journey_completed")
+            {
+                presentations.RemoveWhere(id => id.StartsWith(journey + ":", StringComparison.Ordinal));
+                if (presentations.Count == 0) RestoreGame();
+                return;
+            }
+            if (!properties.TryGetValue("screen_id",out var screen)) return;
             var id = journey + ":" + screen;
             if (name == "screen_shown" && presentations.Add(id) && !ownsPause)
             {
