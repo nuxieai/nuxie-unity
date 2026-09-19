@@ -2,6 +2,14 @@
 
 ## Current native pins
 
+iOS `48fa51d6591f61d437620abfa06eb7fcb1a64564` preserves a verified cached object when a conflicting
+signed byte-count claim is rejected. Android remains
+`4d65783e2eec5b585673041146dff887258d3c93`. The Swift bridge compiles against this cache-only iOS fix. Final package
+readiness is recorded in the pull request; the player measurements below name
+the preceding iOS revision, with the same Android revision.
+
+## Final video playback candidate checks
+
 iOS `95d76d41eb4cc945cb57e5c1bcd8333ed15d55cc` and Android `4d65783e2eec5b585673041146dff887258d3c93` include
 published Apple runtime 0.10.8 and Android runtime 0.4.8, rendered-video visibility,
 and interruption recovery fixes. At these exact pins, `dotnet test
@@ -12,9 +20,24 @@ artifacts, and `python3 scripts/pack.py` verified their hashes and produced the
 UPM archive. `python3 scripts/check-unity.py --packed --tests-only` installed
 that actual package and passed all four EditMode and nine PlayMode tests.
 `python3 scripts/check-ios.py` also compiled the shipped Swift bridge against
-the exact iOS pin for the ARM64 simulator. Native player exports/builds, playback
-and final readiness remain pending. Results below identify the earlier revisions
-they qualified.
+the exact iOS pin for the ARM64 simulator. Packed-package iOS device, ARM64 simulator and Android IL2CPP exports passed.
+The exported simulator player and Android APK built successfully. iOS playback
+results follow; Android player measurements follow.
+
+The actual ARM64 iOS simulator player passed a clean cold launch, background /
+foreground return, and process restart while the delivery origin timed out.
+Each 12-screenshot sequence observed at least three red/blue transitions after
+startup, excluding a static launch snapshot as a playback oracle. Independently
+hashed cached scene `242a0ebc242f2617d923a9e1e04a7cf01b9d5d6a8e62cc934f1f26df6efef4db`
+and MP4 `f0a65563c100506c0f98c138e8be1ae333c9879bb77237fbada60bddcfa78669`
+matched the signed inventory. This establishes the tested iOS playback and bounded
+origin-outage cases, not audio measurement, caption accessibility, or every
+resource/failure scenario. Canonical readiness passed at this candidate, including
+all bridge and source checks. The actual Android player also passed clean cold playback, process restart and
+Home/Recents return, with at least three video color changes per capture and
+matching cached object hashes. Both mobile APKs passed 16 KiB ZIP alignment.
+An earlier attempt to return by explicitly launching the singleTask game
+Activity instead popped the native screen; that harness run is excluded.
 
 ## Native pin refresh — September 18, 2026
 
