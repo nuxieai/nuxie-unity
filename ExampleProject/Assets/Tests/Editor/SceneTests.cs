@@ -27,6 +27,27 @@ namespace Nuxie.Unity.Example.Tests
             }
             finally { Time.timeScale = oldScale; AudioListener.pause = oldAudio; }
         }
+        [Test] public void CompletedJourneyReleasesOnlyItsOwnedGamePause()
+        {
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/SdkLab.unity");
+            var lab = scene.GetRootGameObjects().SelectMany(o => o.GetComponentsInChildren<MonoBehaviour>()).First(b => b.GetType().Name == "SdkLab");
+            var handle = lab.GetType().GetMethod("HandleScreenActivity",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var oldScale = Time.timeScale; var oldAudio = AudioListener.pause;
+            var first = new System.Collections.Generic.Dictionary<string,object> { ["screen_id"] = "offer", ["journey_id"] = "first" };
+            var second = new System.Collections.Generic.Dictionary<string,object> { ["screen_id"] = "offer", ["journey_id"] = "second" };
+            try
+            {
+                Time.timeScale = .75f; AudioListener.pause = false;
+                handle.Invoke(lab,new object[] { "screen_shown",first });
+                handle.Invoke(lab,new object[] { "screen_shown",second });
+                first.Remove("screen_id"); second.Remove("screen_id");
+                handle.Invoke(lab,new object[] { "journey_completed",first });
+                Assert.AreEqual(0,Time.timeScale); Assert.IsTrue(AudioListener.pause);
+                handle.Invoke(lab,new object[] { "journey_completed",second });
+                Assert.AreEqual(.75f,Time.timeScale); Assert.IsFalse(AudioListener.pause);
+            }
+            finally { Time.timeScale = oldScale; AudioListener.pause = oldAudio; }
+        }
         [TestCase("SdkLab")]
         [TestCase("Gameplay")]
         public void SceneContainsWorkingLabController(string name)

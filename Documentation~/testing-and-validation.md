@@ -2,6 +2,29 @@
 
 ## Current native pins
 
+iOS `1e6970f306a9dac2ed567a239bf0e64a83e2d7cc` and Android
+`20f9d42f7d5fe1cba6e2426d63c24499eb966ce7` include shared immutable-video
+bindings, cancellation of obsolete acquisition, and live caption preference
+refresh. Native Android preparation passed with all 50 artifact hashes verified.
+The actual packed package passed five EditMode and nine PlayMode tests plus iOS
+device/simulator and Android IL2CPP exports. Final committed-tree readiness is
+recorded in the PR.
+
+The real iOS simulator player passed audible and muted signed video with a
+440 Hz engine tone. Screenshots contained red and blue video frames. The source
+output peak was approximately 0.07071 before and after presentation; its sample
+clock stayed fixed while the Lab paused game audio, then advanced 24,576 samples
+following SDK dismissal. Each run uninstalled/reinstalled the synthetic Lab.
+The probe exposed a Lab integration bug: Journey completion did not release its
+saved game pause unless a separate screen-dismiss event arrived. The fix removes
+only that Journey's presentations and restores the original time scale/audio
+state when no active presentation remains; a two-Journey regression verifies
+late completion cannot unpause another Journey. Both sample copies match.
+This measures engine output and host ownership, not acoustic speaker latency or
+other apps' audio. Earlier player measurements below retain their original pins.
+
+## Earlier cache-preservation pin qualification
+
 iOS `48fa51d6591f61d437620abfa06eb7fcb1a64564` preserves a verified cached object when a conflicting
 signed byte-count claim is rejected. Android remains
 `4d65783e2eec5b585673041146dff887258d3c93`. The Swift bridge compiles against this cache-only iOS fix. Final package
@@ -155,3 +178,16 @@ python3 scripts/pack.py
 `python3 scripts/check.py` runs the complete local SDK gate above. `node ../../scripts/pr-readiness.mjs run` records its PR readiness receipt after committing a clean branch. The Unity check requires a licensed Editor with iOS/Android modules and retains test XML and export logs under `.native/unity-check`. Set `UNITY_EDITOR` if the Editor is installed elsewhere. Native Android preparation requires Java 17 and Android SDK/NDK tooling.
 
 The Unity check exports projects; building and running those native projects is an additional qualification step. Build the generated iOS simulator project with Xcode's `Unity-iPhone` scheme, Debug, `iphonesimulator`, arm64 and signing disabled. Build Android's generated `launcher` module with `assembleDebug` using the Gradle/JDK supplied by the tested Unity Editor. See the example and native dependency guides for local configuration and debug endpoint overrides.
+
+## Development game audio probe
+
+Set `audioQualification: true` with `autoConnect: true` in the ignored
+`NuxieLab.local.json` development configuration. The real AudioSource plays a
+440 Hz tone before the native Experience. `NUXIE_GAME_AUDIO` logs require a
+nonzero output buffer and progressing sample clock before presentation, a
+stationary clock under the Lab's existing `AudioListener.pause` policy, and
+restored output/progression after SDK dismissal. Use audible and muted signed
+video fixtures and verify visible playback. This opt-in probe is compiled only
+for development builds and the Editor; it does not measure external speaker
+latency or competing applications. The Lab deliberately pauses game audio for
+all presented screens, including muted ones. Remove the local flag afterward.
