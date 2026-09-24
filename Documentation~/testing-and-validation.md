@@ -1,6 +1,29 @@
 # Qualification record
 
-## Current native pins
+## Experience goal and eligibility pins
+
+iOS `8c41617716c5c5086aba44e0d64f048692c515ae` and Android
+`0cbe8086068eb1a0d7e1c53c4440de4c9e3bd5ae` implement the Experience policy
+hard cut: one optional goal, retained conversion measurement, presentation-safe
+exits, and offer-specific access checks. Both retain internal action/renderer
+origin through capture and restart; ordinary analytics IDs cannot authorize
+direct custom attribution. Milestone and old policy payloads are rejected.
+
+Both native SDK full gates passed at these pins. On September 24, 2026,
+`python3 scripts/check.py` passed all 20 managed tests, the core-library build,
+Android preparation, and the Swift bridge simulator build. It then exited 1 at
+`check-unity.py --packed`, reporting that `UNITY_EDITOR` must identify a licensed
+Editor. Log: `/tmp/nuxie-goal-clock-unity-full.txt`.
+`python3 scripts/pack.py` subsequently passed native hash, package inventory,
+and Unity metadata validation and produced the UPM archive.
+
+For this change, the project owner explicitly authorized delivery without
+installing Unity. Editor EditMode/PlayMode tests, IL2CPP exports, and rendered
+Unity-player acceptance were skipped under that exception. They are not claimed
+as passing, and earlier engine results do not qualify these pins. The normal
+`scripts/check.py` gate remains unchanged for future changes.
+
+## Previous video SDK pin qualification
 
 iOS `1e6970f306a9dac2ed567a239bf0e64a83e2d7cc` and Android
 `20f9d42f7d5fe1cba6e2426d63c24499eb966ce7` include shared immutable-video
