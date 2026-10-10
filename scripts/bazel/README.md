@@ -19,9 +19,6 @@ Verify the cache override without compiling native sources:
 python3 -B -m unittest discover -s scripts/bazel -p 'test_cache.py'
 ```
 
-This workspace establishes the cache policy for the SDK's Bazel migration.
-Existing host-language build and qualification commands remain available.
-
 ## Direct SDK builds
 
 ```sh
