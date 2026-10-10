@@ -22,3 +22,9 @@ UserSettings/
 !dotnet/Nuxie.Unity.Core/Nuxie.Unity.Core.csproj
 
 ExampleProject/Assets/Resources/NuxieLab.local.json*
+/.bazel-cache.local.bazelrc
+/.bazel-cache.*.tmp
+/bazel-*
+/scripts/bazel/__pycache__/
+!scripts/bazel/Runner.csproj
+/scripts/bazel/obj/

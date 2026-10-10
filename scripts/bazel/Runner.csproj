@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NuGetLockFilePath>runner.packages.lock.json</NuGetLockFilePath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit.runner.utility" Version="2.9.3" />
+  </ItemGroup>
+</Project>
