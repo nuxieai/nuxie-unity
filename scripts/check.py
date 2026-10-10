@@ -5,8 +5,8 @@ import subprocess
 
 root = Path(__file__).resolve().parent.parent
 for command in [
-    ['dotnet', 'test', 'dotnet/Nuxie.Unity.slnx', '--nologo'],
-    ['dotnet', 'build', 'dotnet/Nuxie.Unity.Core/Nuxie.Unity.Core.csproj', '--nologo'],
+    ['python3', 'scripts/bazel/sdk.py', 'test'],
+    ['python3', 'scripts/bazel/sdk.py', 'build'],
     ['python3', 'scripts/prepare-native.py'],
     ['python3', 'scripts/check-ios.py'],
     ['python3', 'scripts/check-unity.py', '--packed'],

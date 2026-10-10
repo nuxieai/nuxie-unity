@@ -1,4 +1,10 @@
+load("@rules_swift//swift:swift.bzl", "swift_library")
+load("@rules_apple//apple:apple.bzl", "apple_xcframework")
+load("@rules_apple//apple:ios.bzl", "ios_unit_test")
+load("@rules_kotlin//kotlin:android.bzl", "kt_android_library", "kt_android_local_test")
+load("//scripts/bazel:bridge_artifacts.bzl", "bridge_aar", "bridge_framework_module")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
+
 
 package(default_visibility = ["//visibility:public"])
 
@@ -16,8 +22,63 @@ csharp_library(
 csharp_test(
     name = "managed_test",
     out = "Nuxie.Unity.Core.Tests",
-    srcs = glob(["Runtime/**/*.cs", "dotnet/Nuxie.Unity.Core.Tests/*.cs"]) + ["scripts/bazel/managed-test-main.cs"],
+    srcs = glob(["Runtime/**/*.cs", "dotnet/Nuxie.Unity.Core.Tests/*.cs"]) + ["//scripts/bazel:managed-test-main.cs"],
     target_frameworks = ["net8.0"],
     langversion = "9.0",
-    deps = ["@unity_nuget//newtonsoft.json", "@unity_nuget//xunit", "@unity_nuget//xunit.runner.utility"],
+    deps = ["@unity_nuget//newtonsoft.json", "@unity_nuget//xunit", "@unity_nuget//xunit.extensibility.core", "@unity_nuget//xunit.assert", "@unity_nuget//xunit.runner.utility"],
 )
+
+exports_files(["NATIVE-PINS.json"])
+config_setting(name = "release_configuration", values = {"compilation_mode": "opt"})
+
+swift_library(
+    name = "ios_bridge",
+    module_name = "NuxieUnityBridge",
+    srcs = glob(["Runtime/Plugins/iOS/*.swift"]),
+    deps = ["@nuxie_native_ios//:sdk"],
+    copts = ["-swift-version", "5", "-strict-concurrency=complete"],
+    features = ["swift.enable_library_evolution", "swift.emit_swiftinterface"],
+    defines = select({":release_configuration": [], "//conditions:default": ["DEBUG"]}),
+    target_compatible_with = ["@platforms//os:ios"],
+)
+
+bridge_framework_module(name = "ios_framework_module", deps = [":ios_bridge"])
+
+apple_xcframework(
+    name = "ios_bridge_xcframework",
+    bundle_name = "NuxieUnityBridge",
+    bundle_id = "ai.nuxie.unity.bridge",
+    deps = [":ios_framework_module"],
+    infoplists = ["//scripts/bazel:Bridge.plist"],
+    ios = {"device": ["arm64"], "simulator": ["arm64", "x86_64"]},
+    minimum_os_versions = {"ios": "15.0"},
+    families_required = {"ios": ["iphone", "ipad"]},
+)
+
+genrule(
+    name = "android_manifest",
+    srcs = ["Native~/Android/src/main/AndroidManifest.xml"],
+    outs = ["BridgeAndroidManifest.xml"],
+    tools = ["//scripts/bazel:bridge_artifacts"],
+    cmd = "$(location //scripts/bazel:bridge_artifacts) manifest --input $(SRCS) --output $@ --package ai.nuxie.unity",
+)
+
+BRIDGE_DEPS = [
+    "@nuxie_native_android//:sdk",
+    "@bridge_maven//:org_jetbrains_kotlinx_kotlinx_coroutines_android",
+    "@bridge_maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm",
+]
+kt_android_library(
+    name = "android_bridge",
+    srcs = glob(["Native~/Android/src/main/**/*.kt"]) + glob(["Native~/Android/src/main/**/*.java"], allow_empty = True),
+    manifest = ":android_manifest",
+    custom_package = "ai.nuxie.unity",
+    deps = BRIDGE_DEPS,
+)
+bridge_aar(
+    name = "android_bridge_aar",
+    library = ":android_bridge",
+    consumer_rules = "Native~/Android/consumer-rules.pro",
+)
+
+platform(name = "android_arm64", constraint_values = ["@platforms//os:android", "@platforms//cpu:arm64"])
