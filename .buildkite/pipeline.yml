@@ -2,20 +2,30 @@ env:
   CI: "1"
 
 steps:
-  - label: ":unity: Managed and Apple bridge contracts"
+  - label: ":unity: Direct managed contracts"
     command: |
       set -euo pipefail
-      if [[ -f dotnet/Nuxie.Unity.Core.Tests/Nuxie.Unity.Core.Tests.csproj ]]; then
-        dotnet test dotnet/Nuxie.Unity.slnx --nologo
-      else
-        test -n "$(find dotnet/Nuxie.Unity.Core.Tests -name '*.cs' -print -quit)"
-      fi
-      swiftc -parse Runtime/Plugins/iOS/NuxieUnityBridge.swift
+      source scripts/bazel/ci-cache.sh
+      export NUXIE_BAZEL_JOBS=2
+      python3 scripts/bazel/update-nuget.py --check
+      python3 scripts/bazel/sdk.py test
+      python3 scripts/bazel/sdk.py build
     agents:
       queue: nuxie-pr
-      nuxie-platform: macos
     timeout_in_minutes: 30
     retry:
       automatic:
         - exit_status: -1
           limit: 1
+  - label: ":apple: Direct Unity native bridges"
+    command: |
+      set -euo pipefail
+      source scripts/bazel/ci-cache.sh
+      export NUXIE_BAZEL_JOBS=2
+      python3 scripts/prepare-native.py
+      python3 scripts/check-ios.py
+      python3 scripts/pack.py
+    agents:
+      queue: nuxie-pr
+      nuxie-platform: macos
+    timeout_in_minutes: 120

@@ -1,59 +1,24 @@
 #!/usr/bin/env python3
-"""Build the pinned Android SDK into a self-contained Maven repository for UPM packing."""
-import json
-import os
+"""Compile the Android bridge directly and stage the pinned UPM Maven repository."""
 from pathlib import Path
-import subprocess
+import hashlib
+import json
+import sys
+import tempfile
 
 root = Path(__file__).resolve().parent.parent
-pin = json.loads((root / 'NATIVE-PINS.json').read_text())['android']
-source = root / '.native/android'
-source.parent.mkdir(exist_ok=True)
-if not source.exists():
-    subprocess.run(['git', 'clone', '--no-checkout', pin['repository'], str(source)], check=True)
-else:
-    status = subprocess.check_output(['git', 'status', '--porcelain'], cwd=source, text=True)
-    if status.strip():
-        raise SystemExit('Preserving modified native checkout: ' + str(source))
-subprocess.run(['git', 'fetch', 'origin', pin['revision']], cwd=source, check=True)
-subprocess.run(['git', 'checkout', '--detach', pin['revision']], cwd=source, check=True)
-# Android Gradle Plugin owns variant dependencies and emits the POM from that component.
-init = root / '.native/publish.gradle'
-init.write_text('''allprojects { project ->
-  if (project.name == 'nuxie-android') {
-    project.pluginManager.withPlugin('com.android.library') {
-      project.pluginManager.apply('maven-publish')
-      project.afterEvaluate {
-        project.publishing {
-          publications {
-            nuxie(MavenPublication) {
-              from project.components.release
-              groupId = 'ai.nuxie'
-              artifactId = 'nuxie-android'
-              version = '0.2.0-''' + pin['revision'] + ''''
-            }
-          }
-          repositories { maven { name = 'Npm'; url = uri(System.getenv('NUXIE_NPM_MAVEN')) } }
-        }
-      }
-    }
-  }
-}
-''')
-env = dict(os.environ, NUXIE_NPM_MAVEN=str(root / '.native/maven'))
-subprocess.run(['./gradlew', '-I', str(init), ':nuxie-android:publishNuxiePublicationToNpmRepository'], cwd=source, env=env, check=True)
-import shutil
-versions = root / '.native/maven/ai/nuxie/nuxie-android'
-for previous in versions.iterdir():
-    if previous.is_dir() and previous.name != '0.2.0-' + pin['revision']:
-        shutil.rmtree(previous)
-print('Pinned Android Maven artifact and transitive dependency metadata ready for packing.')
+sys.path.insert(0, str(root / 'scripts/bazel'))
+from sdk import android_build, copy_maven, publish_tree
+from bridge_artifacts import publish_maven
 
-subprocess.run([str(source / 'gradlew'), '-p', str(root / 'Native~/Android'), 'publishBridgePublicationToPackageRepository'], env=env, check=True)
-
-artifacts = root / 'Artifacts~/maven'
-if artifacts.exists(): shutil.rmtree(artifacts)
-shutil.copytree(root / '.native/maven', artifacts)
-import hashlib
-checksums = {str(p.relative_to(root / 'Artifacts~')): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(artifacts.rglob('*')) if p.is_file()}
+artifact, manifest = android_build()
+pin = json.loads((root / 'NATIVE-PINS.json').read_text())['android']['revision']
+with tempfile.TemporaryDirectory(prefix='upm-maven-', dir=root / '.native') as temporary:
+    maven = Path(temporary) / 'maven'
+    copy_maven(manifest, maven)
+    publish_maven(artifact, maven / 'ai/nuxie/nuxie-unity-bridge/0.2.0', '0.2.0', pin)
+    publish_tree(maven, root / 'Artifacts~/maven')
+checksums = {str(path.relative_to(root / 'Artifacts~')): hashlib.sha256(path.read_bytes()).hexdigest()
+             for path in sorted((root / 'Artifacts~/maven').rglob('*')) if path.is_file()}
 (root / 'Artifacts~/checksums.json').write_text(json.dumps(checksums, indent=2) + '\n')
+print('Prepared direct Bazel Android products for UPM packing.')

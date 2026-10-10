@@ -7,7 +7,7 @@ def _impl(_ctx):
         "name": "Microsoft.CodeCoverage",
         "id": "Microsoft.CodeCoverage",
         "version": "17.14.1",
-        "sha512": "sha512-pmTrhfFIoplzFVbhVwUquT+77CbGH+h4/3mBpdmIlYtBi9nAB+kKI6dN3A/nV4DFi3wLLx/BlHIPK+MkbQ6Tpg==",
+        "sha512": "sha512-J/ZZlEKHfgDMZSUtDbsaccoLC1rrETvotQMMf4n6TbfLxytdYTP3dbKxaE5x2D+bXuwoESZeSgyd24Ao3prhZg==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -21,7 +21,7 @@ def _impl(_ctx):
         "name": "Microsoft.NET.Test.Sdk",
         "id": "Microsoft.NET.Test.Sdk",
         "version": "17.14.1",
-        "sha512": "sha512-HJKqKOE+vshXra2aEHpi2TlxYX7Z9VFYkr+E5rwEvHC8eIXiyO+K9kNm8vmNom3e2rA56WqxU+/N9NJlLGXsJQ==",
+        "sha512": "sha512-StGq/XXxPRDVTuHokqg1QDNWNo/NCHBF+7EAQWIt1revlYeTM/zdTEp193L1Sqtd0wIUhuT/7AiIzJKQ3HNxsw==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -38,7 +38,7 @@ def _impl(_ctx):
         "name": "Microsoft.TestPlatform.ObjectModel",
         "id": "Microsoft.TestPlatform.ObjectModel",
         "version": "17.14.1",
-        "sha512": "sha512-xTP1W6Mi6SWmuxd3a+jj9G9UoC850WGwZUps1Wah9r1ZxgXhdJfj1QqDLJkFjHDCvN42qDL2Ps5KjQYWUU0zcQ==",
+        "sha512": "sha512-+jiozvIIOnkO3pnZf4QIuswoZBbj8e4+RTx11KkfDbrhnFLYwSfuXkI0p/7xQIBP6XWfZvEsmfCPrzy9zIo+3Q==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -54,7 +54,7 @@ def _impl(_ctx):
         "name": "Microsoft.TestPlatform.TestHost",
         "id": "Microsoft.TestPlatform.TestHost",
         "version": "17.14.1",
-        "sha512": "sha512-d78LPzGKkJwsJXAQwsbJJ7LE7D1wB+rAyhHHAaODF+RDSQ0NgMjDFkSA1Djw18VrxO76GlKAjRUhl+H8NL8Z+Q==",
+        "sha512": "sha512-/V3Acu/lqnYDInFcadS5g+1Pd19Qd+xrdQqQ4t08i4euP9qWH6XGoyz6YldTBa6EUf2b/8cAoD8cLjzoCGATBA==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -71,12 +71,12 @@ def _impl(_ctx):
         "name": "Newtonsoft.Json",
         "id": "Newtonsoft.Json",
         "version": "13.0.3",
-        "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+        "sha512": "sha512-mbJSvHfRxfX3tR/U6n1WU+mWHXswYc+SB/hkOpx8yZZe68hNZGfymJu0cjsaJEkVzCMqePiU6LdIyogqfIn7kg==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
         "dependencies": {
-            ".NETStandard,Version=v2.1": [],
+            "netstandard2.1": [],
             "net8.0": []
         },
         "targeting_pack_overrides": [],
@@ -86,7 +86,7 @@ def _impl(_ctx):
         "name": "System.Collections.Immutable",
         "id": "System.Collections.Immutable",
         "version": "8.0.0",
-        "sha512": "sha512-AurL6Y5BA1WotzlEvVaIDpqzpIPvYnnldxru8oXJU2yFxFUy3+pNXjXd1ymO+RA0rq0+590Q8gaz2l3Sr7fmqg==",
+        "sha512": "sha512-BXqVkcIrhimvvem6q2ChWkuW6XYYirvb6FlhvuwaMoBqBdpcr4nehJBKP65Tw40UqcUM6oDoODsecM0yjZ6AUw==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -100,7 +100,7 @@ def _impl(_ctx):
         "name": "System.Reflection.Metadata",
         "id": "System.Reflection.Metadata",
         "version": "8.0.0",
-        "sha512": "sha512-ptvgrFh7PvWI8bcVqG5rsA/weWM09EnthFHR5SCnS6IN+P4mj6rE1lBDC4U8HL9/57htKAqy4KQ3bBj84cfYyQ==",
+        "sha512": "sha512-+6sMdkJjee0B6nm3AlBBl7cQaI0oPniLvvkrkFhmEN3fo/hGONaFdwpAaO+GRTlbZe4kRZzFwU7kSXQW0RyJxg==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -116,7 +116,7 @@ def _impl(_ctx):
         "name": "xunit",
         "id": "xunit",
         "version": "2.9.3",
-        "sha512": "sha512-TlXQBinK35LpOPKHAqbLY4xlEen9TBafjs0V5KnA4wZsoQLQJiirCR4CbIXvOH8NzkW4YeJKP5P/Bnrodm0h9Q==",
+        "sha512": "sha512-3/ayVPC7NQWQENR5REbOgXYsbhoJsmpnxQa5pO4lxbjGbckOs62nsm4kLErzc8ng7V5Xz08uwVjMqaZGJiXCrg==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -134,7 +134,7 @@ def _impl(_ctx):
         "name": "xunit.abstractions",
         "id": "xunit.abstractions",
         "version": "2.0.3",
-        "sha512": "sha512-pot1I4YOxlWjIb5jmwvvQNbTrZ3lJQ+jUGkGjWE3hEFM0l5gOnBWS+H3qsex68s5cO52g+44vpGzhAt+42vwKg==",
+        "sha512": "sha512-PKJri5f0qEQPFvgY6CZR9XG8JROlWSdC/ZYLkkDQuID++Egn+yWjB+Yf57AZ8U6GRlP7z33uDQ4/r5BZPer2JA==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -148,7 +148,7 @@ def _impl(_ctx):
         "name": "xunit.analyzers",
         "id": "xunit.analyzers",
         "version": "1.18.0",
-        "sha512": "sha512-OtFMHN8yqIcYP9wcVIgJrq01AfTxijjAqVDy/WeQVSyrDC1RzBWeQPztL49DN2syXRah8TYnfvk035s7L95EZQ==",
+        "sha512": "sha512-Yy9tOAzVncE1avA2GrOJoUxTmT6fQJOcqxsg9f53Ox7Y7V//BtQ4GV9zg7qnqMzyzymabriJ55SGKb1HKbPOOA==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -162,7 +162,7 @@ def _impl(_ctx):
         "name": "xunit.assert",
         "id": "xunit.assert",
         "version": "2.9.3",
-        "sha512": "sha512-/Kq28fCE7MjOV42YLVRAJzRF0WmEqsmflm0cfpMjGtzQ2lR5mYVj1/i0Y8uDAOLczkL3/jArrwehfMD0YogMAA==",
+        "sha512": "sha512-wfqwCKAhSWGy9P/dPqDGSIBnPW3sUJ49MEfcTqNF+5BgJwjwtHb9SE7ajYZuR8ymTd8dwxoEGnlJHiejbgDv9w==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -176,7 +176,7 @@ def _impl(_ctx):
         "name": "xunit.core",
         "id": "xunit.core",
         "version": "2.9.3",
-        "sha512": "sha512-BiAEvqGvyme19wE0wTKdADH+NloYqikiU0mcnmiNyXaF9HyHmE6sr/3DC5vnBkgsWaE6yPyWszKSPSApWdRVeQ==",
+        "sha512": "sha512-cv2sO37qJkIbBL3fXDIn3EPQ2zK8LQ6FkMJNnn1xc9n8mo3ik0URA4MfUNCmwDDCx83ZiJeRrJ0y1ykasojNJg==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -193,7 +193,7 @@ def _impl(_ctx):
         "name": "xunit.extensibility.core",
         "id": "xunit.extensibility.core",
         "version": "2.9.3",
-        "sha512": "sha512-kf3si0YTn2a8J8eZNb+zFpwfoyvIrQ7ivNk5ZYA5yuYk1bEtMe4DxJ2CF/qsRgmEnDr7MnW1mxylBaHTZ4qErA==",
+        "sha512": "sha512-S0a+jmIF/DraKuJ+FfWbqXMwvpcKxjP3GdrQzz5pr3GYtgII2XfDdAhkU/5VIWqWon2R6Q31X/9sTGaU+koDaQ==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -209,7 +209,7 @@ def _impl(_ctx):
         "name": "xunit.extensibility.execution",
         "id": "xunit.extensibility.execution",
         "version": "2.9.3",
-        "sha512": "sha512-yMb6vMESlSrE3Wfj7V6cjQ3S4TXdXpRqYeNEI3zsX31uTsGMJjEw6oD5F5u1cHnMptjhEECnmZSsPxB6ChZHDQ==",
+        "sha512": "sha512-IidoBSrGw/KhWzZsKXIcStohj/oRFZizbWeUv+0hOFLeMJMegSW5QoGNzmjQuF8BuRtCyPQQukWSYdNnnfPAkA==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -225,7 +225,7 @@ def _impl(_ctx):
         "name": "xunit.runner.utility",
         "id": "xunit.runner.utility",
         "version": "2.9.3",
-        "sha512": "sha512-cAUw6GadBR19A9/345e3BFiAkhN9P5xPrxiZgks0xdRv+DxdIWiizE5vjyExKNyFzsm+r1jDhccpUyojBDT7OA==",
+        "sha512": "sha512-L2zlPa7Ci/Awf5LdeTOvKOanev1bB6xV2Gxbrc+EDDN1hO/j0AIbu5PM8lXgkX69/8xaaex7zrxHZd8gcz2ilQ==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
@@ -241,7 +241,7 @@ def _impl(_ctx):
         "name": "xunit.runner.visualstudio",
         "id": "xunit.runner.visualstudio",
         "version": "3.1.4",
-        "sha512": "sha512-5mj99LvCqrq3CNi06xYdyIAXOEh+5b33F2nErCzI5zWiDdLHXiPXEWFSUAF8zlIv0ZWqjZNCwHTQeAPYbF3pCg==",
+        "sha512": "sha512-kBchYhMXhe6mbAAkCuh2wrLbxDYdj3VzNOJ3m1Q9LoCEJ6ePsFC1S3vsjj/QlY6aaQ8HeRip816tlwP0lLtb3Q==",
         "sources": [
             "https://api.nuget.org/v3/index.json"
         ],
