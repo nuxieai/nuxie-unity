@@ -1,0 +1,23 @@
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
+
+package(default_visibility = ["//visibility:public"])
+
+csharp_library(
+    name = "managed",
+    out = "Nuxie.Unity.Core",
+    srcs = glob(["Runtime/**/*.cs"]),
+    target_frameworks = ["netstandard2.1"],
+    langversion = "9.0",
+    deps = ["@unity_nuget//newtonsoft.json"],
+)
+
+# Keep the same runtime-source/test-source assembly boundary as the .csproj.
+# The official xUnit runner executes the existing facts, theories and assertions.
+csharp_test(
+    name = "managed_test",
+    out = "Nuxie.Unity.Core.Tests",
+    srcs = glob(["Runtime/**/*.cs", "dotnet/Nuxie.Unity.Core.Tests/*.cs"]) + ["scripts/bazel/managed-test-main.cs"],
+    target_frameworks = ["net8.0"],
+    langversion = "9.0",
+    deps = ["@unity_nuget//newtonsoft.json", "@unity_nuget//xunit", "@unity_nuget//xunit.runner.utility"],
+)
