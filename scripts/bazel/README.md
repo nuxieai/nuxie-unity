@@ -60,3 +60,10 @@ Portable and Apple actions clear Android SDK variables; Android actions use an
 isolated view of installed SDK 36/build-tools 36.0.0 with Java 21. Preparation of
 the native SDK also requires its pinned NDK. `NUXIE_BAZEL_JOBS` limits actions;
 CI uses two. Host Bazel rc files are disabled so they cannot override this policy.
+
+For a check that builds both Apple configurations, set
+`NUXIE_IOS_DEBUG_ARTIFACTS=/absolute/debug/sdk-artifacts.json` and
+`NUXIE_IOS_RELEASE_ARTIFACTS=/absolute/release/sdk-artifacts.json`. These select
+separate genuine producer receipts without duplicating their product trees.
+Each configuration falls back to `NUXIE_IOS_ARTIFACTS` when its specific override
+is unset. See [the native artifact contract](NATIVE-ARTIFACTS.md) for validation.
