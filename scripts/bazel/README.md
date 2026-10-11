@@ -31,6 +31,8 @@ python3 scripts/check.py
 
 `build` compiles the runtime C# sources for `netstandard2.1`; `test` compiles
 and runs the existing 20 xUnit cases under .NET 8 with the official xUnit runner.
+`scripts/check-ios.py` leases an owned iOS simulator and executes all four
+native v3 admission/Journey cases through `//:ios_bridge_test`.
 The Kotlin bridge and Swift bridge have direct `//:android_bridge_aar` and
 `//:ios_bridge` targets. Native preparation preserves the UPM Maven coordinates,
 release-component POM scopes, consumer rules and artifact checksums.
@@ -60,6 +62,13 @@ Portable and Apple actions clear Android SDK variables; Android actions use an
 isolated view of installed SDK 36/build-tools 36.0.0 with Java 21. Preparation of
 the native SDK also requires its pinned NDK. `NUXIE_BAZEL_JOBS` limits actions;
 CI uses two. Host Bazel rc files are disabled so they cannot override this policy.
+
+The iOS bridge test executes the native v3 profile verifier and screenless
+Journey through the shipped adapter. It checks forwarded Journey activity and
+actual native completion reports with typed event output values. Signed retired
+v1/v2 schemas and a v3 descriptor signed under the retired domain must produce
+an explicit native authentication failure and no authoritative publication.
+These adapter checks do not qualify rendered form editing or licensed engines.
 
 For a check that builds both Apple configurations, set
 `NUXIE_IOS_DEBUG_ARTIFACTS=/absolute/debug/sdk-artifacts.json` and

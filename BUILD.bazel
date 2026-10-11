@@ -45,6 +45,23 @@ swift_library(
     target_compatible_with = ["@platforms//os:ios"],
 )
 
+swift_library(
+    name = "ios_test_library",
+    testonly = True,
+    module_name = "NuxieUnityBridgeTests",
+    srcs = glob(["Native~/iOS/Tests/NuxieUnityBridgeTests/*.swift"]),
+    deps = [":ios_bridge", "@nuxie_native_ios//:sdk"],
+    copts = ["-swift-version", "5"],
+    target_compatible_with = ["@platforms//os:ios"],
+)
+ios_unit_test(
+    name = "ios_bridge_test",
+    deps = [":ios_test_library"],
+    resources = glob(["Native~/iOS/Tests/NuxieUnityBridgeTests/native-v3/*.json"]),
+    minimum_os_version = "15.0",
+    tags = ["manual"],
+)
+
 bridge_framework_module(name = "ios_framework_module", deps = [":ios_bridge"])
 
 apple_xcframework(

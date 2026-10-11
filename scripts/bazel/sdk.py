@@ -218,9 +218,9 @@ def android_build(configuration='Release', test=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    commands = ['build', 'test', 'build-android', 'check-ios', 'prepare-ios']
+    commands = ['build', 'test', 'build-android', 'check-ios', 'test-ios', 'prepare-ios']
     if SDK != 'unity':
-        commands += ['test-android', 'test-ios']
+        commands += ['test-android']
     parser.add_argument('command', choices=commands)
     parser.add_argument('--configuration', choices=['Debug', 'Release'], default='Release')
     args = parser.parse_args()
