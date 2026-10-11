@@ -11,11 +11,24 @@ dependency is `7ebe2d72570b169712fd913fd2c5b2de4bf2848d`, landed in
 
 The owning SDK uses direct Bazel targets in local development and CI. Repository
 and action caches are shared across worktrees; compiler outputs and staged
-products are private to each checkout. Frontend helper checks and actual Debug
-and Release Apple action-graph audits passed, including device ARM64 and
-simulator ARM64/x86_64 compiler targets. Native preparation and bridge checks
-against the final landed producer pins remain pending. Historical qualification
-below applies only to the revisions it names.
+products are private to each checkout. At the landed producer pins above:
+
+- `python3 -B -m unittest discover -s scripts/bazel -p 'test_*.py'`: all 42 frontend, cache, native-import and publication tests passed.
+- `python3 scripts/bazel/update-nuget.py --check`: the 16 locked NuGet packages match the Bazel graph.
+- `python3 scripts/check.py`: all 20 original xUnit cases, the managed build, Android preparation and Swift simulator bridge compilation passed. It then exited 1 at `check-unity.py --packed` because the licensed Editor is absent; the overall command is not reported as passing.
+- `python3 scripts/pack.py`: native hashes, package inventory and Unity metadata passed, producing `com.nuxie.unity-0.2.0.tgz` (SHA-256 `23972928a3162db818803f7e4bfe026cc3318789ccff148135970974ad36f1eb`).
+- `python3 scripts/bazel/sdk.py prepare-ios --configuration Debug` and the corresponding `Release` command passed with separate genuine producer receipts. Actual compiler actions use `arm64-apple-ios15.0`, `arm64-apple-ios15.0-simulator` and `x86_64-apple-ios15.0-simulator`; every binary's Mach-O platform, architecture inventory and six SDK resource files were independently verified.
+
+Independent inspection of the final Android bridge AAR proves its API 23 floor,
+owning bridge classes and exact consumer rules. All 25 published native Maven
+files match the landed producer's receipt. The bridge POM preserves the original
+Gradle scope/version contract, checked against the retained independent oracle.
+Logs and inventories are under `.native/qualification/`.
+
+The project owner waived licensed Unity Editor qualification for this migration.
+EditMode/PlayMode tests, IL2CPP exports and rendered player acceptance remain
+unqualified. The normal owning gate is unchanged. Historical qualification below
+applies only to the revisions it names.
 
 ## Previous Experience goal and eligibility pin qualification
 
