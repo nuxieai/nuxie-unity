@@ -13,6 +13,7 @@ Build/
 dotnet/**/bin/
 dotnet/**/obj/
 .native/
+/.build/
 Native~/Android/.gradle/
 Native~/Android/build/
 Native~/Android/local.properties
