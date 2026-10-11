@@ -129,8 +129,13 @@ def simulator_flags():
     matches = [(runtime, device) for runtime, group in devices.items() for device in group if device.get('udid') == identifier]
     if len(matches) != 1:
         raise ValueError('Selected simulator is unavailable')
-    # rules_apple's default runner accepts an existing exact UUID through its
-    # destination argument; --ios_simulator_device is a device type, not a name.
+    runtime, _device = matches[0]
+    if '.iOS-' not in runtime:
+        raise ValueError('Selected simulator must run iOS')
+    actual_version = tuple(int(part) for part in runtime.split('.iOS-', 1)[1].split('-'))
+    minimum_version = tuple(int(part) for part in MINIMUM_IOS.split('.'))
+    if actual_version < minimum_version:
+        raise ValueError('Selected simulator must run iOS ' + MINIMUM_IOS + '+')
     return ['--test_arg=--destination=platform=ios_simulator,id=' + identifier]
 
 
