@@ -129,8 +129,9 @@ def simulator_flags():
     matches = [(runtime, device) for runtime, group in devices.items() for device in group if device.get('udid') == identifier]
     if len(matches) != 1:
         raise ValueError('Selected simulator is unavailable')
-    runtime, device = matches[0]
-    return ['--ios_simulator_device=' + device['name'], '--ios_simulator_version=' + runtime.split('.iOS-', 1)[1].replace('-', '.')]
+    # rules_apple's default runner accepts an existing exact UUID through its
+    # destination argument; --ios_simulator_device is a device type, not a name.
+    return ['--test_arg=--destination=platform=ios_simulator,id=' + identifier]
 
 
 def ios_check(test=False):
