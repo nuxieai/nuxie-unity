@@ -44,12 +44,18 @@ def run(command, minimum_os='15.0'):
     child = None
     previous = {}
     terminated = None
+    cleaning = False
 
     def terminate(signum, _frame):
         nonlocal terminated
+        if cleaning:
+            return
         if child is None:
             raise SystemExit(128 + signum)
-        terminated = (signum, time.monotonic())
+        if terminated is None:
+            terminated = (signum, time.monotonic())
+        if child.poll() is not None:
+            return
         try:
             os.killpg(child.pid, signum)
         except ProcessLookupError:
@@ -74,15 +80,20 @@ def run(command, minimum_os='15.0'):
                 if terminated and time.monotonic() - terminated[1] > 10:
                     os.killpg(child.pid, signal.SIGKILL)
     finally:
-        for signum, handler in previous.items():
-            signal.signal(signum, handler)
-        if owned is not None:
-            # Shutdown may report an already-stopped device. Deletion is still required.
-            try:
-                subprocess.run(['xcrun', 'simctl', 'shutdown', owned], check=False, timeout=30,
-                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            finally:
-                subprocess.run(['xcrun', 'simctl', 'delete', owned], check=True, timeout=30)
+        cleaning = True
+        try:
+            if owned is not None:
+                # Keep the handlers and isolate cleanup subprocesses so a second
+                # terminal interrupt cannot strand the caller's owned device.
+                try:
+                    subprocess.run(['xcrun', 'simctl', 'shutdown', owned], check=False, timeout=30,
+                                   start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                finally:
+                    subprocess.run(['xcrun', 'simctl', 'delete', owned], check=True, timeout=30,
+                                   start_new_session=True)
+        finally:
+            for signum, handler in previous.items():
+                signal.signal(signum, handler)
 
 
 def main():
