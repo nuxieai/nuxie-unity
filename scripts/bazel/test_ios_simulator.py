@@ -33,7 +33,7 @@ class SimulatorLeaseTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         tool = self.root / 'xcrun'
-        tool.write_text('#!' + sys.executable + '\n' + '''import json, os, sys
+        tool.write_text('#!' + sys.executable + '\n' + '''import json, os, sys, time
 from pathlib import Path
 root = Path(os.environ['LEASE_TEST_ROOT'])
 args = sys.argv[1:]
@@ -41,6 +41,9 @@ with (root/'calls.jsonl').open('a') as stream: stream.write(json.dumps(args)+'\\
 if args[1] == 'list': print((root/'runtimes.json').read_text())
 elif args[1] == 'create': print(os.environ['LEASE_OWNED'])
 elif args[1] == 'bootstatus' and os.environ.get('LEASE_BOOT_FAIL'): sys.exit(9)
+elif args[1] == 'shutdown' and os.environ.get('LEASE_CLEANUP_HOLD'):
+    (root/'cleanup-entered').write_text('shutdown')
+    time.sleep(0.5)
 ''')
         tool.chmod(0o755)
         (self.root / 'runtimes.json').write_text(json.dumps(RUNTIMES))
@@ -91,6 +94,31 @@ elif args[1] == 'bootstatus' and os.environ.get('LEASE_BOOT_FAIL'): sys.exit(9)
                 time.sleep(0.02)
             self.assertTrue((self.root / 'child-pid').is_file())
             process.send_signal(signal.SIGTERM)
+            _stdout, stderr = process.communicate(timeout=5)
+            self.assertEqual(process.returncode, 143, stderr)
+            self.assertEqual(self.calls()[-1], ['simctl', 'delete', OWNED])
+            with self.assertRaises(ProcessLookupError):
+                os.kill(int((self.root / 'child-pid').read_text()), 0)
+        finally:
+            if process.poll() is None:
+                process.kill()
+                process.communicate()
+
+    def test_second_interrupt_during_cleanup_still_deletes_owned_device(self):
+        command = [sys.executable, str(HELPER), '--', sys.executable, '-c',
+                   'import os,pathlib,time; pathlib.Path(os.environ["LEASE_TEST_ROOT"],"child-pid").write_text(str(os.getpid())); time.sleep(60)']
+        process = subprocess.Popen(command, env=dict(self.environment, LEASE_CLEANUP_HOLD='1'),
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            def wait_for(name):
+                deadline = time.monotonic() + 5
+                while not (self.root / name).exists() and process.poll() is None and time.monotonic() < deadline:
+                    time.sleep(0.02)
+                self.assertTrue((self.root / name).is_file())
+            wait_for('child-pid')
+            process.send_signal(signal.SIGTERM)
+            wait_for('cleanup-entered')
+            process.send_signal(signal.SIGINT)
             _stdout, stderr = process.communicate(timeout=5)
             self.assertEqual(process.returncode, 143, stderr)
             self.assertEqual(self.calls()[-1], ['simctl', 'delete', OWNED])
