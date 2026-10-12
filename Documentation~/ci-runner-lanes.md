@@ -45,3 +45,16 @@ NDK 29.0.14206865/CMake 3.22.1 must be provisioned first; the validator performs
 no installation. The default full `python3 scripts/check.py` still requires a
 licensed Unity Editor and both mobile modules, including `check-unity.py
 --packed`. Lane splitting does not claim licensed player qualification.
+
+Under runner policy2, native preparation requires the fixed root-issued public
+qualification at `/etc/nuxie/buildkite-native-producer-qualifications.json` on
+Linux or `/Library/NuxieBuildkite/native-producer-qualifications.json` on Mac.
+The receipt binds the exact canonical producer repository/revision, complete
+executing frontend/control hashes, and platform/profile/capability. Missing or
+mismatched approval rejects before checkout or producer execution; dirty,
+untracked or changed frontend bytes reject before the isolated child. Produced
+artifacts are independently checked against their exact native receipt. Safe
+supplied receipts still skip producer execution. No job-selected receipt path,
+automatic approval, pin update or cache eligibility is granted. Legacy readiness
+commands remain unchanged; actual native and installed-host qualification is
+still required before activating these source modes.
