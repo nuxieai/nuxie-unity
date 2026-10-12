@@ -1,38 +1,31 @@
-env:
-  CI: "1"
-
-steps:
-  - label: ":unity: Direct managed contracts"
-    command: |
-      set -euo pipefail
-      source scripts/bazel/ci-cache.sh
-      export NUXIE_BAZEL_JOBS=2
-      python3 scripts/bazel/update-nuget.py --check
-      python3 scripts/bazel/sdk.py test
-      python3 scripts/bazel/sdk.py build
-    agents:
-      queue: nuxie-pr
-    timeout_in_minutes: 30
-    retry:
-      automatic:
-        - exit_status: -1
-          limit: 1
-  - label: ":apple: Direct Unity native bridges"
-    command: |
-      set -euo pipefail
-      source scripts/bazel/ci-cache.sh
-      export NUXIE_BAZEL_JOBS=2
-      export JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home}"
-      export ANDROID_HOME="${ANDROID_HOME:-/opt/homebrew/share/android-commandlinetools}"
-      export ANDROID_SDK_ROOT="$ANDROID_HOME"
-      export PATH="$JAVA_HOME/bin:$PATH"
-      "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
-        "platforms;android-36" "build-tools;36.0.0" "ndk;29.0.14206865" \
-        "cmake;3.22.1"
-      python3 scripts/prepare-native.py
-      python3 scripts/check-ios.py
-      python3 scripts/pack.py
-    agents:
-      queue: nuxie-pr
-      nuxie-platform: macos
-    timeout_in_minutes: 120
+{
+  "steps": [
+    {
+      "label": ":pipeline: Upload SDK pipeline",
+      "key": "pipeline-upload-legacy",
+      "if": "build.env(\"NUXIE_CI_RUNNER_POLICY_VERSION\") != \"2\"",
+      "command": "set -euo pipefail\npython3 scripts/ci/pipeline.py | buildkite-agent pipeline upload --replace --no-interpolation\n",
+      "agents": {
+        "queue": "nuxie-pr"
+      },
+      "timeout_in_minutes": 10
+    },
+    {
+      "label": ":pipeline: Upload SDK pipeline",
+      "key": "pipeline-upload-v2",
+      "if": "build.env(\"NUXIE_CI_RUNNER_POLICY_VERSION\") == \"2\"",
+      "command": "set -euo pipefail\npython3 scripts/ci/pipeline.py | buildkite-agent pipeline upload --replace --no-interpolation\n",
+      "agents": {
+        "queue": "nuxie-pr",
+        "nuxie-platform": "linux",
+        "nuxie-resources": "linux-16g-v2"
+      },
+      "timeout_in_minutes": 10,
+      "env": {
+        "NUXIE_CI_RUNNER_POLICY_VERSION": "2",
+        "NUXIE_CI_RUNNER_PROFILE": "linux-portable",
+        "NUXIE_BAZEL_REMOTE_CACHE_MODE": "off"
+      }
+    }
+  ]
+}
