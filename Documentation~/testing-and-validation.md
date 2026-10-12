@@ -13,8 +13,10 @@ their exact clean producer revisions; an earlier product cannot be relabeled.
 Bazel compile actions share the existing host caches across worktrees, while
 compiler outputs, staged products and fixture evidence remain checkout-owned.
 
-The native v3 test target executes the shipped Swift adapter against four
-reproducible, genuinely signed profiles over a private loopback HTTP server.
+The native v3 test target executes the shipped Swift adapter in a test-only,
+scene-capable UIKit host against four reproducible, genuinely signed profiles
+over a private loopback HTTP server. The host has no native SDK dependencies;
+the test bundle links the actual adapter and SDK.
 It requires accepted v3 admission, ordered adapter and native Journey events,
 matching identities and completion outcome, and exact number/string/Boolean
 run outputs. Retired v1/v2 schemas and a v3 descriptor signed under the retired
@@ -37,8 +39,13 @@ On this host, the identical compiled OSLog marker and capture command produced
 an exact PID/timestamp event on iOS 26.5 and no events on the tested iOS 27
 devices. This local runtime/device comparison is tracked in
 [UNIV-4333](https://universe.basis.dev/issue/UNIV-4333). It does not establish an
-Apple-wide defect. The normal helper still chooses the latest available runtime;
-on this host that default cannot satisfy the required log-readiness oracle.
+Apple-wide defect. A separate same-binary comparison on the preserved iOS 26.5
+device confirmed that the logic-test launcher's standalone `simctl spawn -s`
+disables logging, while ordinary launch captures the marker live. The v3 target
+therefore uses a declarative Bazel test host and retains the strict log oracle.
+This launch fix does not qualify the earlier iOS 27 runtime/device observations.
+The normal helper still chooses the latest available runtime; qualification on
+this host explicitly selects the proven iOS 26.5 device.
 
 Select an owned, already booted iOS 26.5 simulator using the existing caller
 lease option before running the native gate:
