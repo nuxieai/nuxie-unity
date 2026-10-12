@@ -29,9 +29,23 @@ independent verifier are tracked alongside the harness.
 These tests cover screenless native adapter sessions and their public event
 boundary. They do not establish rendered form editing, native text-input UI,
 Android JNI Journey execution, or an engine player. The historical native v2
-results below do not qualify these v3 pins. Actual v3 gate counts, original
-native receipts and prepared artifact hashes will be recorded separately after
-the current native consumer checks complete.
+results below do not qualify these v3 pins.
+
+At the exact native revisions above, the October 11 v3 qualification passed
+these available gates:
+
+- `python3 scripts/check-ios.py`: four hosted XCTest cases passed on the caller-owned iOS 26.5 simulator. The accepted case admitted the real profile, emitted the two ordered adapter and native Journey events, and completed with exact typed outputs. Each negative case produced a PID/time-scoped native authentication error after its identified profile response completed; the concrete error class was visible while its private reason remained redacted. All cases completed the 45-event transport barrier and public shutdown.
+- `python3 scripts/check.py`: the 20 managed xUnit cases, managed build, actual Android native preparation and the four hosted iOS cases passed. The command then exited 1 at the licensed Unity Editor prerequisite. This whole command is not reported as passing; the user explicitly skipped licensed Editor/player qualification.
+- `python3 -B -m unittest discover -s scripts/bazel -p 'test_*.py'`: all 60 helpers passed with zero skips, including both real Mach-O compiler cases.
+- `python3 scripts/bazel/update-nuget.py --check`: all 16 locked packages matched the Bazel graph.
+- `python3 scripts/pack.py`: native hashes, package inventory and Unity metadata passed. The final archive includes the native v3 pins and source-addressed Android Maven products.
+- `python3 scripts/bazel/sdk.py prepare-ios --configuration Debug` and the corresponding `Release` command: both passed against their original clean native producer receipts. The prepared frameworks contain device arm64 and simulator arm64/x86_64 slices; their Mach-O platforms and native resource hashes passed the owning publication checks.
+
+The original native receipts, compiler/test logs, signed HTTP fixture ledgers,
+scoped native logs, package and framework products are retained separately from
+regenerable output bases. These results establish the available adapter and
+package boundaries; licensed Unity Editor/player and rendered/device checks
+remain explicitly unqualified.
 
 ### Selecting the local simulator
 
