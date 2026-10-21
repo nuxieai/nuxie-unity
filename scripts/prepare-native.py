@@ -16,7 +16,7 @@ pin = json.loads((root / 'NATIVE-PINS.json').read_text())['android']['revision']
 with tempfile.TemporaryDirectory(prefix='upm-maven-', dir=root / '.native') as temporary:
     maven = Path(temporary) / 'maven'
     copy_maven(manifest, maven)
-    publish_maven(artifact, maven / 'ai/nuxie/nuxie-unity-bridge/0.2.0', '0.2.0', pin)
+    publish_maven(artifact, maven / 'ai/nuxie/nuxie-unity-bridge/1.0.0', '1.0.0', pin)
     publish_tree(maven, root / 'Artifacts~/maven')
 checksums = {str(path.relative_to(root / 'Artifacts~')): hashlib.sha256(path.read_bytes()).hexdigest()
              for path in sorted((root / 'Artifacts~/maven').rglob('*')) if path.is_file()}

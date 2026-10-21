@@ -2,8 +2,6 @@
 
 **Native Experiences. Live Feature access. Built for your game.**
 
-This is the breaking **0.2** SDK, replacing the old interface completely. It is not published yet. Use the source checkout or a prepared package while evaluating this revision.
-
 Bring remotely authored onboarding, offers, paywalls and other Experiences into your iOS and Android game. Nuxie's native SDKs handle presentation, purchases and access; your C# code decides when the moment is right.
 
 ```csharp
@@ -32,7 +30,7 @@ python3 scripts/prepare-native.py
 python3 scripts/pack.py
 ```
 
-The pack command also stages `.native/package`, which the example references. Do not install the repository root as a local package: it contains the example project itself. Open `ExampleProject` in Unity Hub, or use **Window → Package Manager → Install package from tarball** and select `com.nuxie.unity-0.2.0.tgz`. Published releases use immutable versioned packages; the old `0.1.0` tag does not contain this interface.
+The pack command also stages `.native/package`, which the example references. Do not install the repository root as a local package: it contains the example project itself. Open `ExampleProject` in Unity Hub, or use **Window → Package Manager → Install package from tarball** and select [`com.nuxie.unity-1.0.0.tgz`](https://github.com/nuxieai/nuxie-unity/releases/download/v1.0.0/com.nuxie.unity-1.0.0.tgz).
 
 Nuxie is one UPM package, `com.nuxie.unity`. It declares its managed dependencies and carries prepared Android artifacts. The iOS export hook adds the pinned native Swift package. You do not manually edit AppDelegate or replace your Android Activity.
 
