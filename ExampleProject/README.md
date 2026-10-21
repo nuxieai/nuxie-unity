@@ -1,6 +1,6 @@
 # Unity SDK Lab
 
-Open this directory in Unity 6000.3.24f1 after preparing the package with `python3 scripts/prepare-native.py` and `python3 scripts/pack.py` from the SDK root. It uses the prepared local UPM package. Both SdkLab and Gameplay scenes contain the same Lab UI so changing scenes exercises observer cleanup while retaining the SDK session.
+Open this directory in Unity 6000.6.7f1 after preparing the package with `python3 scripts/prepare-native.py` and `python3 scripts/pack.py` from the SDK root. It uses the prepared local UPM package. Both SdkLab and Gameplay scenes contain the same Lab UI so changing scenes exercises observer cleanup while retaining the SDK session.
 
 The imported sample scripts are generated from `Samples~/SdkLab`; edit the sample, then run `python3 scripts/sync-example.py`. Do not edit the generated copy independently.
 

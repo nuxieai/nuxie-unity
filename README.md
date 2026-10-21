@@ -19,7 +19,7 @@ Triggering records an event. The native SDK decides whether a Journey should run
 | Unity Editor | Explicit simulator for game integration testing |
 | Desktop players, WebGL, consoles | Unsupported in this release |
 
-The example targets **Unity 6000.3.24f1**, iOS 15+ and Android API 25+ with IL2CPP arm64. See [qualification](Documentation~/testing-and-validation.md) for completed checks and limitations, and [native pins](NATIVE-PINS.json) for the exact SDK inputs. Editor simulation is not a backend or store test.
+The example targets **Unity 6000.6.7f1**, iOS 15+ and Android API 25+ with IL2CPP arm64. See [qualification](Documentation~/testing-and-validation.md) for completed checks and limitations, and [native pins](NATIVE-PINS.json) for the exact SDK inputs. Editor simulation is not a backend or store test.
 
 ## Install
 
@@ -185,5 +185,5 @@ on the remote Mac and retain its reports and package as Buildkite artifacts.
 The job uses the existing Mac concurrency limit; portable and Android work can
 use Linux with the already qualified split lanes.
 
-The Mac needs licensed Unity 6000.3.24f1 with iOS and Android build support.
+The Mac needs licensed Unity 6000.6.7f1 with iOS and Android build support.
 Set `UNITY_EDITOR` if it is installed outside the standard Unity Hub path.
