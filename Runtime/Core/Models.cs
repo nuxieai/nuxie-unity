@@ -46,7 +46,7 @@ namespace Nuxie.Unity
     {
         public NuxieStatusKind State { get; }
         public NuxieException Error { get; }
-        public string WrapperVersion => "0.2.0";
+        public string WrapperVersion => "1.0.0";
         public string NativeVersion { get; }
         public NuxieStatus(NuxieStatusKind state, string nativeVersion = null, NuxieException error = null)
         { State = state; NativeVersion = nativeVersion; Error = error; }

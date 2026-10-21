@@ -73,7 +73,7 @@ namespace Nuxie.Unity.Editor
             PackageFiles.CopyDirectory(Path.Combine(PackageFiles.Root,"Artifacts~/maven"),Path.Combine(root,"nuxie-maven"));
             var settings = Path.Combine(root,"settings.gradle");
             AppendOnce(settings,"// Nuxie repository", "\ndependencyResolutionManagement { repositories { maven { url uri(\"${rootDir}/nuxie-maven\") } } }\n");
-            AppendOnce(Path.Combine(path,"build.gradle"),"// Nuxie dependency", "\ndependencies { implementation 'ai.nuxie:nuxie-unity-bridge:0.2.0' }\n");
+            AppendOnce(Path.Combine(path,"build.gradle"),"// Nuxie dependency", "\ndependencies { implementation 'ai.nuxie:nuxie-unity-bridge:1.0.0' }\n");
             // The pinned native SDK supplies the newer shared C++ runtime. Keep one copy
             // in the final app instead of selecting an arbitrary duplicate in the launcher.
             AppendOnce(Path.Combine(path,"build.gradle"),"// Nuxie shared C++ runtime", "\nandroid { packaging { jniLibs { excludes += ['**/libc++_shared.so'] } } }\n");

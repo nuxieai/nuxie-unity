@@ -19,7 +19,7 @@ dependencies {
 }
 afterEvaluate {
     publishing {
-        publications { create<MavenPublication>("bridge") { from(components["release"]); groupId = "ai.nuxie"; artifactId = "nuxie-unity-bridge"; version = "0.2.0" } }
+        publications { create<MavenPublication>("bridge") { from(components["release"]); groupId = "ai.nuxie"; artifactId = "nuxie-unity-bridge"; version = "1.0.0" } }
         repositories { maven { name = "Package"; url = uri("../../.native/maven") } }
     }
 }

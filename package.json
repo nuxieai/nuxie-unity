@@ -1,7 +1,7 @@
 {
   "name": "com.nuxie.unity",
   "displayName": "Nuxie Unity SDK",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "unity": "6000.0",
   "description": "Native-first Unity SDK for Nuxie (iOS + Android).",
   "keywords": [
