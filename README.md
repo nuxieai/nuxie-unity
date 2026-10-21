@@ -177,3 +177,13 @@ Publish an Experience whose button emits an App Action. Trigger it, tap the actu
 | Callback missing in Release | Inspect stripping/AOT diagnostics; qualify the release player, not only the Editor. |
 
 Read the [API reference](Documentation~/api-reference.md), [native dependency guide](Documentation~/native-dependencies.md), [example setup](https://github.com/nuxieai/nuxie-unity/tree/main/ExampleProject), and [qualification record](Documentation~/testing-and-validation.md).
+
+### Release checks on Buildkite
+
+Set `NUXIE_SDK_ENGINE_CHECK=1` on an attended build to run the full engine check
+on the remote Mac and retain its reports and package as Buildkite artifacts.
+The job uses the existing Mac concurrency limit; portable and Android work can
+use Linux with the already qualified split lanes.
+
+The Mac needs licensed Unity 6000.3.24f1 with iOS and Android build support.
+Set `UNITY_EDITOR` if it is installed outside the standard Unity Hub path.

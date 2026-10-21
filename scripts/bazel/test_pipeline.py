@@ -94,6 +94,17 @@ class PipelineTests(unittest.TestCase):
         steps = json.loads(self.render('2', '1', **controls).stdout)['steps']
         self.assertTrue(all(step['env']['NUXIE_BAZEL_REMOTE_CACHE_MODE'] == 'off' for step in steps))
 
+    def test_engine_release_check_runs_on_serialized_mac_and_retains_results(self):
+        for split in ('0', '1'):
+            steps = json.loads(self.render('2', split, NUXIE_SDK_ENGINE_CHECK='1').stdout)['steps']
+            apple = steps[-1]
+            self.assertEqual(apple['agents']['nuxie-platform'], 'macos')
+            self.assertEqual(apple['concurrency_group'], 'nuxie/physical/mac-m2')
+            self.assertEqual(apple['command'].splitlines()[-1], 'python3 scripts/check.py')
+            self.assertIn('.native/unity-check/**/*', apple['artifact_paths'])
+            self.assertIn('com.nuxie.unity-*.tgz', apple['artifact_paths'])
+        self.assertNotEqual(self.render('2', NUXIE_SDK_ENGINE_CHECK='yes').returncode, 0)
+
     def test_repository_upload_v2_selector_has_initial_profile(self):
         steps = json.loads((ROOT / '.buildkite/pipeline.yml').read_text())['steps']
         self.assertEqual(len(steps), 2)
