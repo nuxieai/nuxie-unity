@@ -54,7 +54,14 @@ def pipeline(environment=None):
         "NUXIE_CI_RUNNER_POLICY_VERSION=1 python3 -B -m unittest discover -s scripts/ci -p 'test_*.py'\n" + document['steps'][0]['command']) if version == '2' else document['steps'][0]['command']
     if engine_check == '1':
         apple = document['steps'][-1]
-        apple['command'] += 'python3 scripts/check.py\n'
+        apple['command'] += '\n'.join([
+            'export JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home}"',
+            'export ANDROID_HOME="${ANDROID_HOME:-/opt/homebrew/share/android-commandlinetools}"',
+            'export ANDROID_SDK_ROOT="$ANDROID_HOME"',
+            'export PATH="$JAVA_HOME/bin:$PATH"',
+            'python3 scripts/ci/android-toolchain.py',
+            'python3 scripts/check.py',
+        ]) + '\n'
         apple['timeout_in_minutes'] = 240
         apple['artifact_paths'] = list(dict.fromkeys([*apple.get('artifact_paths', []), '.native/unity-check/**/*', 'com.nuxie.unity-*.tgz']))
     if version == '2':
