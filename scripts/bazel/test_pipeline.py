@@ -13,7 +13,9 @@ SDK = 'unity'
 class PipelineTests(unittest.TestCase):
     def render(self, version='1', split='0', topology='consolidated', **controls):
         env = dict(os.environ, NUXIE_CI_RUNNER_POLICY_VERSION=version,
-                   NUXIE_SDK_SPLIT_LANES=split, NUXIE_CI_RUNNER_TOPOLOGY=topology, **controls)
+                   NUXIE_SDK_SPLIT_LANES=split, NUXIE_CI_RUNNER_TOPOLOGY=topology,
+                   NUXIE_SDK_ENGINE_CHECK='0')
+        env.update(controls)
         return subprocess.run([sys.executable, str(ROOT / 'scripts/ci/pipeline.py')], env=env,
                               capture_output=True, text=True, timeout=10)
 
