@@ -46,7 +46,7 @@ Bazel compiler outputs and shared caches stay separate.
 
 The full public `scripts/check.py` contract also runs the licensed Unity Editor,
 EditMode/PlayMode behavior checks and mobile exports. Those engine checks require
-Unity 6000.3.24f1 and the matching iOS/Android modules. The Buildkite pipeline uses
+Unity 6000.6.7f1 and the matching iOS/Android modules. The Buildkite pipeline uses
 the same direct Bazel managed/native entry points; engine/player qualification
 remains a separate installed-toolchain check.
 

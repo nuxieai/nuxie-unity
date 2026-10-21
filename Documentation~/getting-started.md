@@ -1,6 +1,6 @@
 # Start a mobile integration
 
-Use Unity 6000.3.24f1 with iOS and Android Build Support. Build IL2CPP arm64 players. Install the prepared UPM tarball or open `ExampleProject` after `python3 scripts/prepare-native.py` and `python3 scripts/pack.py`.
+Use Unity 6000.6.7f1 with iOS and Android Build Support. Build IL2CPP arm64 players. Install the prepared UPM tarball or open `ExampleProject` after `python3 scripts/prepare-native.py` and `python3 scripts/pack.py`.
 
 Call `await Nuxie.Client.ConfigureAsync(options)` once from the main thread with both public platform keys. Equivalent calls share setup. Identify the current player, observe Features, and trigger the event authored in your Nuxie app. The client survives scenes; dispose subscriptions in OnDisable. Explicit ShutdownAsync is for changing SDK configuration, not ordinary scene cleanup.
 
