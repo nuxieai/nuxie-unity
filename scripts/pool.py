@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 SDK = 'unity'
-OUTPUTS = ['ExampleProject/Build', '.native/test-evidence', '.native/build', 'Artifacts~', '.native/xcframework', '.native/licenses', '.native/unity-check']
+OUTPUTS = ['.native/artifacts', 'ExampleProject/Build', '.native/test-evidence', '.native/build', 'Artifacts~', '.native/xcframework', '.native/licenses', '.native/unity-check']
 
 
 def selection(mode, arguments, command=None):
