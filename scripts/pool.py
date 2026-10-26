@@ -10,7 +10,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 SDK = 'unity'
-OUTPUTS = ['.native/artifacts', 'ExampleProject/Build', '.native/test-evidence', '.native/build', 'Artifacts~/maven', 'Artifacts~/checksums.json', '.native/package', '.native/xcframework', '.native/licenses', '.native/unity-check']
+OUTPUTS = ['.native/artifacts', 'ExampleProject/Build/Android', 'ExampleProject/Build/iOS', 'ExampleProject/Build/iOS-Simulator', '.native/test-evidence', '.native/build', 'Artifacts~/maven', 'Artifacts~/checksums.json', '.native/package', '.native/xcframework', '.native/licenses', '.native/unity-check']
 
 
 def selection(mode, arguments, command=None, selected_platform=None):
@@ -56,7 +56,7 @@ def selection(mode, arguments, command=None, selected_platform=None):
 
 def dispatch(mode, arguments, *, output=None, command=None, input_files=None, environment=None, selected_platform=None):
     if (os.environ.get('_NUXIE_POOL_NESTED') == '1' or os.environ.get('NUXIE_HOMELAB') == '0'
-            or os.environ.get('NUXIE_EXECUTION') == 'local' or '--help' in arguments or '-h' in arguments): return None
+            or os.environ.get('NUXIE_EXECUTION') == 'local' or os.environ.get('NUXIE_CI_RUNNER_POLICY_VERSION') == '2' or '--help' in arguments or '-h' in arguments): return None
     helper = Path.home() / '.local/share/nuxie-homelab/sdk-task.py'
     configured = (Path.home() / '.config/nuxie/homelab-cluster.json').is_file()
     if not helper.is_file():
@@ -101,7 +101,7 @@ def dispatch(mode, arguments, *, output=None, command=None, input_files=None, en
         input_files = {'Artifacts~': selected, **(input_files or {})}
     return module.route(ROOT, args, frontend=frontend, platform=platform,
                         requirements=requirements, outputs=names, input_files=input_files, environment=environment,
-                        merge_outputs=[name for name in names if name not in ('Artifacts~/maven', '.native/package')])
+                        merge_outputs=[name for name in names if name not in ('Artifacts~/maven', '.native/package') and not name.startswith('ExampleProject/Build/')])
 
 
 def main():
