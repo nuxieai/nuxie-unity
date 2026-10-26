@@ -30,14 +30,14 @@ def selection(mode, arguments, command=None):
             apple = True
         elif command.endswith('-android'):
             requirements.add('android')
-    elif mode == 'check-ios':
+    elif mode in ('check-ios', 'prepare-ios'):
         apple = True
     else:
         apple = selected in ('ios', 'all')
         if mode in ('prepare-native', 'prepare-android') and SDK == 'unity': apple = False
         if mode == 'prepare-android': apple = False
         if selected in ('android', 'all'): requirements.add('android')
-        if mode == 'check':
+        if mode in ('check', 'check-unity'):
             requirements.update({'react-native': ['node'], 'flutter': [],
                 'godot': ['godot@4.7.2'], 'unity': ['unity'], 'ue': ['unreal@5.8']}.get(SDK, []))
     if 'unity' in requirements:
@@ -72,8 +72,13 @@ def dispatch(mode, arguments, *, output=None, command=None, input_files=None, en
     args = list(arguments) if mode == 'sdk' else [mode, *arguments]
     if output is not None and not any(a == '--output' or a.startswith('--output=') for a in args):
         args += ['--output', str(output)]
+    if mode == 'check-unity':
+        selected = ROOT / 'Artifacts~'
+        if not selected.is_dir(): raise ValueError('Prepare native SDK products before Unity checks')
+        input_files = {'Artifacts~': selected, **(input_files or {})}
     return module.route(ROOT, args, frontend=frontend, platform=platform,
-                        requirements=requirements, outputs=names, input_files=input_files, environment=environment)
+                        requirements=requirements, outputs=names, input_files=input_files, environment=environment,
+                        merge_outputs=[name for name in names if not (SDK == 'react-native' and name == 'dist')])
 
 
 def main():

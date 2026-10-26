@@ -6,6 +6,8 @@ import os
 import json
 import subprocess
 import xml.etree.ElementTree as ET
+import sys
+from pool import dispatch
 
 root = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
@@ -13,6 +15,8 @@ parser.add_argument('--editor', default=os.environ.get('UNITY_EDITOR'))
 parser.add_argument('--tests-only', action='store_true')
 parser.add_argument('--packed', action='store_true', help='Resolve the actual UPM tarball while checking; restore the source manifest afterward')
 args = parser.parse_args()
+status = dispatch('check-unity', sys.argv[1:])
+if status is not None: raise SystemExit(status)
 version = (root / 'ExampleProject/ProjectSettings/ProjectVersion.txt').read_text().split(':', 1)[1].strip().splitlines()[0]
 editor = Path(args.editor) if args.editor else Path('/Applications/Unity/Hub/Editor') / version / 'Unity.app/Contents/MacOS/Unity'
 if editor.suffix == '.app': editor = editor / 'Contents/MacOS/Unity'
