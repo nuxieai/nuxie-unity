@@ -3,6 +3,10 @@
 from pathlib import Path
 import subprocess
 
+from pool import dispatch
+status = dispatch('check', [])
+if status is not None: raise SystemExit(status)
+
 root = Path(__file__).resolve().parent.parent
 for command in [
     ['python3', 'scripts/bazel/sdk.py', 'test'],

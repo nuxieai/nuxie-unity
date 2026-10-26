@@ -29,3 +29,9 @@ ExampleProject/Assets/Resources/NuxieLab.local.json*
 /scripts/bazel/__pycache__/
 !scripts/bazel/Runner.csproj
 /scripts/bazel/obj/
+
+# Pool evidence belongs to this checkout, never to SDK source.
+/.nuxie/
+/scripts/__pycache__/
+
+__pycache__/
