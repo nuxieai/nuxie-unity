@@ -10,7 +10,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 SDK = 'unity'
-OUTPUTS = ['.native/artifacts', 'ExampleProject/Build', '.native/test-evidence', '.native/build', 'Artifacts~', '.native/xcframework', '.native/licenses', '.native/unity-check']
+OUTPUTS = ['.native/artifacts', 'ExampleProject/Build', '.native/test-evidence', '.native/build', 'Artifacts~/maven', 'Artifacts~/checksums.json', '.native/package', '.native/xcframework', '.native/licenses', '.native/unity-check']
 
 
 def selection(mode, arguments, command=None, selected_platform=None):
@@ -101,7 +101,7 @@ def dispatch(mode, arguments, *, output=None, command=None, input_files=None, en
         input_files = {'Artifacts~': selected, **(input_files or {})}
     return module.route(ROOT, args, frontend=frontend, platform=platform,
                         requirements=requirements, outputs=names, input_files=input_files, environment=environment,
-                        merge_outputs=[name for name in names if not (SDK == 'react-native' and name == 'dist')])
+                        merge_outputs=[name for name in names if name not in ('Artifacts~/maven', '.native/package')])
 
 
 def main():
