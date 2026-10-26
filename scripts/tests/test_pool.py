@@ -43,7 +43,7 @@ class PoolRoutingTests(unittest.TestCase):
         self.assertIn('xcode', tools)
 
     def test_ci_authorization_stays_with_its_existing_host(self):
-        with patch.dict(os.environ, {'NUXIE_CI_RUNNER_POLICY_VERSION':'2'}):
+        with patch.dict(os.environ, {'NUXIE_CI_RUNNER_POLICY_VERSION':'2','_NUXIE_POOL_NESTED':'0','NUXIE_HOMELAB':'1','NUXIE_EXECUTION':'pool'}), patch.object(pool.Path,'home',side_effect=AssertionError('CI must not inspect client configuration')):
             self.assertIsNone(pool.dispatch('sdk', ['test']))
 
     def test_nested_command_does_not_submit_another_request(self):
