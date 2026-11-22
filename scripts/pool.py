@@ -13,7 +13,17 @@ SDK = 'unity'
 OUTPUTS = ['.native/artifacts', 'ExampleProject/Build/Android', 'ExampleProject/Build/iOS', 'ExampleProject/Build/iOS-Simulator', '.native/test-evidence', '.native/build', 'Artifacts~/maven', 'Artifacts~/checksums.json', '.native/package', '.native/xcframework', '.native/licenses', '.native/unity-check']
 
 
+# Each full check is a sequence of independently placed, capability-declared phases.
+CHECK_PHASES = {'portable': ('portable', []), 'android': ('portable', ['android']), 'ios': ('macos', ['xcode']), 'engine': ('macos', ['android', 'unity@6000.6.7f1', 'xcode'])}
+
+
 def selection(mode, arguments, command=None, selected_platform=None):
+    if mode == 'check' and '--phase' in arguments:
+        index = arguments.index('--phase')
+        if index + 1 >= len(arguments) or arguments[index + 1] not in CHECK_PHASES:
+            raise ValueError('Unknown SDK check phase')
+        platform, requirements = CHECK_PHASES[arguments[index + 1]]
+        return platform, list(requirements)
     selected = 'android' if mode == 'prepare-native' and SDK in ('react-native', 'unity') else 'all'
     for i, arg in enumerate(arguments):
         if arg == '--platform' and i + 1 < len(arguments): selected = arguments[i + 1]
@@ -57,6 +67,13 @@ def selection(mode, arguments, command=None, selected_platform=None):
 def dispatch(mode, arguments, *, output=None, command=None, input_files=None, environment=None, selected_platform=None):
     if (os.environ.get('_NUXIE_POOL_NESTED') == '1' or os.environ.get('NUXIE_HOMELAB') == '0'
             or os.environ.get('NUXIE_EXECUTION') == 'local' or os.environ.get('NUXIE_CI_RUNNER_POLICY_VERSION') == '2' or '--help' in arguments or '-h' in arguments): return None
+    if mode == 'check' and selected_platform in (None, 'all') and arguments in ([], ['--platform', 'all'], ['--platform=all']):
+        for phase in CHECK_PHASES:
+            print('SDK check phase: ' + phase, file=sys.stderr, flush=True)
+            status = dispatch('check', ['--phase', phase], output=output, command=command,
+                              input_files=input_files, environment=environment)
+            if status is None or status != 0: return status
+        return 0
     helper = Path.home() / '.local/share/nuxie-homelab/sdk-task.py'
     configured = (Path.home() / '.config/nuxie/homelab-cluster.json').is_file()
     if not helper.is_file():
